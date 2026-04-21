@@ -32,10 +32,10 @@ export default function ColorConverter() {
     <ToolErrorBoundary>
       <div className="space-y-4">
         <div className="space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Hex Color</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">十六进制颜色</p>
           <div className="flex gap-2">
             <Input value={hex} onChange={e => setHex(e.target.value)} onKeyDown={e => e.key === 'Enter' && convert()} placeholder="#ff0000" className="font-mono text-sm" />
-            <Button onClick={convert} disabled={!hex}>Convert</Button>
+            <Button onClick={convert} disabled={!hex}>转换</Button>
           </div>
         </div>
         {error && <p className="text-sm text-destructive">{error}</p>}

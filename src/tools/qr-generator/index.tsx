@@ -16,10 +16,10 @@ export default function QrGenerator() {
     <ToolErrorBoundary>
       <div className="space-y-4">
         <div className="space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">URL or Text</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">URL 或文本</p>
           <div className="flex gap-2">
             <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && generate()} placeholder="https://example.com" className="font-mono text-sm" />
-            <Button onClick={generate} disabled={!input}>Generate</Button>
+            <Button onClick={generate} disabled={!input}>生成</Button>
           </div>
         </div>
         {value && (

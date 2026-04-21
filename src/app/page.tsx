@@ -28,14 +28,14 @@ export default function HomePage() {
   return (
     <div className="container mx-auto max-w-5xl px-4 py-8">
       <div className="mb-8 space-y-2">
-        <h1 className="text-3xl font-bold tracking-tight">Developer Tools</h1>
-        <p className="text-muted-foreground">A collection of free browser-based tools for developers.</p>
+        <h1 className="text-3xl font-bold tracking-tight">在线开发者工具</h1>
+        <p className="text-muted-foreground">免费的在线开发者工具集合，所有计算均在浏览器本地完成。</p>
       </div>
       <div className="mb-8 max-w-sm">
         <SearchBar value={search} onChange={setSearch} />
       </div>
       {grouped.length === 0 ? (
-        <p className="text-muted-foreground">No tools match &quot;{search}&quot;.</p>
+        <p className="text-muted-foreground">没有找到与 &quot;{search}&quot; 匹配的工具。</p>
       ) : (
         <div className="space-y-8">
           {grouped.map(({ category, label, tools }) => (

@@ -26,9 +26,9 @@ export default function JwtDecoder() {
       <div className="space-y-4">
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">JWT Token</p>
-          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Paste your JWT here..." className="min-h-[100px] font-mono text-sm" />
+          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="在此粘贴 JWT Token..." className="min-h-[100px] font-mono text-sm" />
         </div>
-        <Button onClick={decode} disabled={!input}>Decode</Button>
+        <Button onClick={decode} disabled={!input}>解析</Button>
         {error && <p className="text-sm text-destructive">{error}</p>}
         {decoded && (
           <div className="space-y-3">
@@ -39,7 +39,7 @@ export default function JwtDecoder() {
               </div>
             ))}
             <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Signature</p>
+              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">签名</p>
               <code className="block rounded border bg-muted px-3 py-2 text-xs font-mono break-all">{decoded.signature}</code>
             </div>
           </div>

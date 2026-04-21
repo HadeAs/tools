@@ -36,7 +36,7 @@ export default async function ToolPage({ params }: Props) {
   return (
     <div className="space-y-8">
       <nav className="flex items-center gap-1 text-sm text-muted-foreground">
-        <Link href="/" className="hover:text-foreground transition-colors">Home</Link>
+        <Link href="/" className="hover:text-foreground transition-colors">首页</Link>
         <ChevronRight className="h-4 w-4" />
         <span>{categoryLabels[tool.category]}</span>
         <ChevronRight className="h-4 w-4" />
@@ -57,7 +57,7 @@ export default async function ToolPage({ params }: Props) {
 
       {related.length > 0 && (
         <section>
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Related Tools</h2>
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">相关工具</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             {related.map(t => <ToolCard key={t.slug} tool={t} compact />)}
           </div>

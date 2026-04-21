@@ -25,18 +25,18 @@ export default function TimestampConverter() {
     <ToolErrorBoundary>
       <div className="max-w-lg space-y-6">
         <div className="space-y-2">
-          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Unix Timestamp</label>
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Unix 时间戳</label>
           <div className="flex gap-2">
-            <Input value={unix} onChange={e => setUnix(e.target.value)} placeholder="e.g. 1713700000" className="font-mono" type="number" />
-            <Button onClick={handleUnixToDate} disabled={!unix}>→ Date</Button>
-            <Button variant="outline" onClick={() => setUnix(String(nowUnix()))}>Now</Button>
+            <Input value={unix} onChange={e => setUnix(e.target.value)} placeholder="例如 1713700000" className="font-mono" type="number" />
+            <Button onClick={handleUnixToDate} disabled={!unix}>→ 日期</Button>
+            <Button variant="outline" onClick={() => setUnix(String(nowUnix()))}>当前时间</Button>
           </div>
         </div>
 
         <div className="space-y-2">
-          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Date / ISO 8601</label>
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">日期 / ISO 8601</label>
           <div className="flex gap-2">
-            <Input value={date} onChange={e => setDate(e.target.value)} placeholder="e.g. 2024-01-01T00:00:00Z" className="font-mono" />
+            <Input value={date} onChange={e => setDate(e.target.value)} placeholder="例如 2024-01-01T00:00:00Z" className="font-mono" />
             <Button onClick={handleDateToUnix} disabled={!date}>→ Unix</Button>
           </div>
         </div>

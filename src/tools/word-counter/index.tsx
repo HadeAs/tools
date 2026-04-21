@@ -15,16 +15,16 @@ export default function WordCounter() {
         <Textarea
           value={text}
           onChange={e => setText(e.target.value)}
-          placeholder="Paste or type your text here..."
+          placeholder="在此粘贴或输入文本..."
           className="min-h-[300px] text-sm"
         />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
           {[
-            { label: 'Words', value: stats.words },
-            { label: 'Characters', value: stats.chars },
-            { label: 'No Spaces', value: stats.charsNoSpaces },
-            { label: 'Lines', value: stats.lines },
-            { label: 'Sentences', value: stats.sentences },
+            { label: '单词', value: stats.words },
+            { label: '字符', value: stats.chars },
+            { label: '非空格', value: stats.charsNoSpaces },
+            { label: '行数', value: stats.lines },
+            { label: '句子', value: stats.sentences },
           ].map(({ label, value }) => (
             <div key={label} className="rounded-lg border bg-card p-3 text-center">
               <p className="text-2xl font-bold">{value}</p>

@@ -15,11 +15,11 @@ export function ToolLayout({ children, input, output, actions }: ToolLayoutProps
         {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Input</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">输入</p>
             {input}
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Output</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">输出</p>
             {output}
           </div>
         </div>

@@ -16,19 +16,19 @@ export type ToolMeta = {
 }
 
 export const tools: ToolMeta[] = [
-  { slug: 'json-formatter', name: 'JSON Formatter', description: 'Format, minify, and validate JSON', category: 'developer', icon: Code2 },
-  { slug: 'base64', name: 'Base64', description: 'Encode and decode Base64 strings', category: 'developer', icon: Key },
-  { slug: 'url-encoder', name: 'URL Encoder', description: 'Encode and decode URL components', category: 'developer', icon: Link },
-  { slug: 'regex-tester', name: 'Regex Tester', description: 'Test regular expressions with match highlighting', category: 'developer', icon: Regex },
-  { slug: 'timestamp', name: 'Timestamp', description: 'Convert Unix timestamps to human-readable dates', category: 'developer', icon: Clock },
-  { slug: 'markdown-preview', name: 'Markdown Preview', description: 'Live preview Markdown as rendered HTML', category: 'text', icon: Eye },
-  { slug: 'word-counter', name: 'Word Counter', description: 'Count words, characters, and lines', category: 'text', icon: AlignLeft },
-  { slug: 'text-diff', name: 'Text Diff', description: 'Compare two texts and highlight differences', category: 'text', icon: FileText },
-  { slug: 'case-converter', name: 'Case Converter', description: 'Convert text between camelCase, snake_case, PascalCase, and more', category: 'text', icon: CaseSensitive },
-  { slug: 'hash-generator', name: 'Hash Generator', description: 'Generate MD5, SHA-1, and SHA-256 hashes', category: 'encoding', icon: Lock },
-  { slug: 'jwt-decoder', name: 'JWT Decoder', description: 'Decode and inspect JWT tokens', category: 'encoding', icon: HashIcon },
-  { slug: 'qr-generator', name: 'QR Code Generator', description: 'Generate QR codes from any text or URL', category: 'encoding', icon: QrCode },
-  { slug: 'color-converter', name: 'Color Converter', description: 'Convert colors between HEX, RGB, and HSL formats', category: 'conversion', icon: Palette },
+  { slug: 'json-formatter', name: 'JSON 格式化', description: '格式化、压缩和验证 JSON', category: 'developer', icon: Code2 },
+  { slug: 'base64', name: 'Base64', description: 'Base64 字符串编码与解码', category: 'developer', icon: Key },
+  { slug: 'url-encoder', name: 'URL 编码器', description: 'URL 组件编码与解码', category: 'developer', icon: Link },
+  { slug: 'regex-tester', name: '正则测试器', description: '测试正则表达式并高亮匹配结果', category: 'developer', icon: Regex },
+  { slug: 'timestamp', name: '时间戳转换', description: 'Unix 时间戳与可读日期互转', category: 'developer', icon: Clock },
+  { slug: 'markdown-preview', name: 'Markdown 预览', description: '实时预览 Markdown 渲染效果', category: 'text', icon: Eye },
+  { slug: 'word-counter', name: '字数统计', description: '统计单词、字符和行数', category: 'text', icon: AlignLeft },
+  { slug: 'text-diff', name: '文本对比', description: '对比两段文本并高亮差异', category: 'text', icon: FileText },
+  { slug: 'case-converter', name: '大小写转换', description: '在 camelCase、snake_case、PascalCase 等命名风格间转换', category: 'text', icon: CaseSensitive },
+  { slug: 'hash-generator', name: '哈希生成器', description: '生成 MD5、SHA-1 和 SHA-256 哈希值', category: 'encoding', icon: Lock },
+  { slug: 'jwt-decoder', name: 'JWT 解析器', description: '解析并查看 JWT Token 内容', category: 'encoding', icon: HashIcon },
+  { slug: 'qr-generator', name: '二维码生成器', description: '将文本或 URL 生成二维码', category: 'encoding', icon: QrCode },
+  { slug: 'color-converter', name: '颜色转换器', description: '在 HEX、RGB 和 HSL 格式之间转换颜色', category: 'conversion', icon: Palette },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {
@@ -52,8 +52,8 @@ export function getRelatedTools(currentSlug: string, count = 4): ToolMeta[] {
 }
 
 export const categoryLabels: Record<ToolCategory, string> = {
-  developer: 'Developer Tools',
-  text: 'Text Processing',
-  encoding: 'Encoding & Crypto',
-  conversion: 'Conversion',
+  developer: '开发者工具',
+  text: '文本处理',
+  encoding: '编码与加密',
+  conversion: '转换工具',
 }

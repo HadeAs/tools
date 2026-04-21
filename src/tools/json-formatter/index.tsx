@@ -33,29 +33,29 @@ export default function JSONFormatter() {
       input={
         <div className="space-y-2">
           <Textarea
-            placeholder="Paste JSON here..."
+            placeholder="在此粘贴 JSON..."
             value={input}
             onChange={e => setInput(e.target.value)}
             className="min-h-[240px] font-mono text-sm"
           />
           {isValid !== null && (
             <Badge variant={isValid ? 'default' : 'destructive'}>
-              {isValid ? 'Valid JSON' : 'Invalid JSON'}
+              {isValid ? 'JSON 合法' : 'JSON 非法'}
             </Badge>
           )}
           {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
       }
       output={
-        <Textarea readOnly value={output} className="min-h-[240px] font-mono text-sm" placeholder="Output appears here..." />
+        <Textarea readOnly value={output} className="min-h-[240px] font-mono text-sm" placeholder="结果显示在此..." />
       }
       actions={
         <>
-          <Button onClick={() => handle(formatJSON)} disabled={!input}>Format</Button>
-          <Button variant="outline" onClick={() => handle(minifyJSON)} disabled={!input}>Minify</Button>
-          <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? 'Copied!' : 'Copy'}</Button>
-          <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>Load Example</Button>
-          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError('') }}>Clear</Button>
+          <Button onClick={() => handle(formatJSON)} disabled={!input}>格式化</Button>
+          <Button variant="outline" onClick={() => handle(minifyJSON)} disabled={!input}>压缩</Button>
+          <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? '已复制！' : '复制'}</Button>
+          <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>加载示例</Button>
+          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError('') }}>清除</Button>
         </>
       }
     />

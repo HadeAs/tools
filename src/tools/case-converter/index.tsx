@@ -37,7 +37,7 @@ export default function CaseConverter() {
       <div className="space-y-4">
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Input</p>
-          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to convert..." className="min-h-[120px] font-mono text-sm" />
+          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="输入要转换的文本..." className="min-h-[120px] font-mono text-sm" />
         </div>
         <div className="flex flex-wrap gap-2">
           {conversions.map(({ label, fn }) => (
@@ -52,7 +52,7 @@ export default function CaseConverter() {
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Output</p>
               <Textarea readOnly value={output} className="min-h-[120px] font-mono text-sm" />
             </div>
-            <Button variant="outline" size="sm" onClick={copyOutput}>{copied ? 'Copied!' : 'Copy'}</Button>
+            <Button variant="outline" size="sm" onClick={copyOutput}>{copied ? '已复制！' : '复制'}</Button>
           </div>
         )}
       </div>

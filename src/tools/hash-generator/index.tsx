@@ -34,9 +34,9 @@ export default function HashGenerator() {
       <div className="space-y-4">
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Input</p>
-          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to hash..." className="min-h-[120px] font-mono text-sm" />
+          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="输入要哈希的文本..." className="min-h-[120px] font-mono text-sm" />
         </div>
-        <Button onClick={generate} disabled={!input}>Generate Hashes</Button>
+        <Button onClick={generate} disabled={!input}>生成哈希</Button>
         {algorithms.some(a => results[a]) && (
           <div className="space-y-3">
             {algorithms.map(algo => results[algo] && (
@@ -44,7 +44,7 @@ export default function HashGenerator() {
                 <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{algo}</p>
                 <div className="flex gap-2">
                   <code className="flex-1 rounded border bg-muted px-3 py-2 text-xs font-mono break-all">{results[algo]}</code>
-                  <Button variant="outline" size="sm" onClick={() => copy(algo)}>{copied === algo ? 'Copied!' : 'Copy'}</Button>
+                  <Button variant="outline" size="sm" onClick={() => copy(algo)}>{copied === algo ? '已复制！' : '复制'}</Button>
                 </div>
               </div>
             ))}

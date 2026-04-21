@@ -32,11 +32,11 @@ export default function MarkdownPreview() {
     <ToolErrorBoundary>
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Markdown</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Markdown 源码</p>
           <Textarea value={input} onChange={e => setInput(e.target.value)} className="min-h-[400px] font-mono text-sm" />
         </div>
         <div className="space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Preview</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">预览</p>
           <div className="min-h-[400px] rounded-md border bg-background p-4 prose prose-sm dark:prose-invert max-w-none overflow-auto">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{input}</ReactMarkdown>
           </div>

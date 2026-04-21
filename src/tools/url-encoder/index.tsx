@@ -30,7 +30,7 @@ export default function URLEncoder() {
       input={
         <div className="space-y-2">
           <Textarea
-            placeholder="Enter URL or encoded string..."
+            placeholder="输入 URL 或已编码字符串..."
             value={input}
             onChange={e => setInput(e.target.value)}
             className="min-h-[200px] font-mono text-sm"
@@ -39,15 +39,15 @@ export default function URLEncoder() {
         </div>
       }
       output={
-        <Textarea readOnly value={output} className="min-h-[200px] font-mono text-sm" placeholder="Output appears here..." />
+        <Textarea readOnly value={output} className="min-h-[200px] font-mono text-sm" placeholder="结果显示在此..." />
       }
       actions={
         <>
-          <Button onClick={() => handle(encodeURL)} disabled={!input}>Encode</Button>
-          <Button variant="outline" onClick={() => handle(decodeURL)} disabled={!input}>Decode</Button>
-          <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? 'Copied!' : 'Copy'}</Button>
-          <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>Load Example</Button>
-          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError('') }}>Clear</Button>
+          <Button onClick={() => handle(encodeURL)} disabled={!input}>编码</Button>
+          <Button variant="outline" onClick={() => handle(decodeURL)} disabled={!input}>解码</Button>
+          <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? '已复制！' : '复制'}</Button>
+          <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>加载示例</Button>
+          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError('') }}>清除</Button>
         </>
       }
     />

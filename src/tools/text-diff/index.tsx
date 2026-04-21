@@ -16,17 +16,17 @@ export default function TextDiff() {
       <div className="space-y-4">
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Original</p>
-            <Textarea value={left} onChange={e => setLeft(e.target.value)} placeholder="Original text..." className="min-h-[200px] font-mono text-sm" />
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">原始文本</p>
+            <Textarea value={left} onChange={e => setLeft(e.target.value)} placeholder="原始文本..." className="min-h-[200px] font-mono text-sm" />
           </div>
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Modified</p>
-            <Textarea value={right} onChange={e => setRight(e.target.value)} placeholder="Modified text..." className="min-h-[200px] font-mono text-sm" />
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">修改后</p>
+            <Textarea value={right} onChange={e => setRight(e.target.value)} placeholder="修改后文本..." className="min-h-[200px] font-mono text-sm" />
           </div>
         </div>
         {parts && (
           <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Diff</p>
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">差异结果</p>
             <div className="rounded-md border bg-muted/30 p-4 font-mono text-sm leading-relaxed whitespace-pre-wrap break-words">
               {parts.map((part, i) => (
                 <span

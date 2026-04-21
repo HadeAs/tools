@@ -39,11 +39,11 @@ export default function RegexTester() {
       <div className="space-y-4">
         <div className="flex gap-2">
           <div className="flex-1 space-y-1">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Pattern</label>
-            <Input value={pattern} onChange={e => setPattern(e.target.value)} placeholder="e.g. \d+" className="font-mono" />
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">正则表达式</label>
+            <Input value={pattern} onChange={e => setPattern(e.target.value)} placeholder="例如 \d+" className="font-mono" />
           </div>
           <div className="w-24 space-y-1">
-            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Flags</label>
+            <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">标志位</label>
             <Input value={flags} onChange={e => setFlags(e.target.value)} placeholder="g, i, m" className="font-mono" />
           </div>
         </div>
@@ -51,14 +51,14 @@ export default function RegexTester() {
         {result?.error && <p className="text-xs text-destructive">{result.error}</p>}
 
         <div className="space-y-1">
-          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Test String</label>
-          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="Enter text to test against..." className="min-h-[140px] font-mono text-sm" />
+          <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">测试字符串</label>
+          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="输入要测试的文本..." className="min-h-[140px] font-mono text-sm" />
         </div>
 
         {input && result && !result.error && (
           <div className="space-y-2">
             <div className="flex items-center gap-2">
-              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Matches</span>
+              <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">匹配结果</span>
               <Badge variant={result.matches.length > 0 ? 'default' : 'secondary'}>{result.matches.length}</Badge>
             </div>
             <div
@@ -69,7 +69,7 @@ export default function RegexTester() {
         )}
 
         <Button variant="ghost" size="sm" onClick={() => { setPattern(EXAMPLE_PATTERN); setInput(EXAMPLE_INPUT) }}>
-          Load Example
+          加载示例
         </Button>
       </div>
     </ToolErrorBoundary>
