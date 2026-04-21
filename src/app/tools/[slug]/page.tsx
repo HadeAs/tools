@@ -5,6 +5,7 @@ import { ChevronRight } from 'lucide-react'
 import { tools, getToolBySlug, getRelatedTools, categoryLabels } from '@/tools/registry'
 import { DynamicTool } from '@/components/dynamic-tool'
 import { ToolCard } from '@/components/tool-card'
+import { RecordVisit } from '@/components/record-visit'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -53,6 +54,7 @@ export default async function ToolPage({ params }: Props) {
         </div>
       </div>
 
+      <RecordVisit slug={slug} />
       <DynamicTool slug={slug} />
 
       {related.length > 0 && (

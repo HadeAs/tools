@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
@@ -16,7 +17,7 @@ const conversions = [
 ]
 
 export default function CaseConverter() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = usePersistedState('tool:case-converter:input', '')
   const [output, setOutput] = useState('')
   const [activeLabel, setActiveLabel] = useState('')
   const [copied, setCopied] = useState(false)

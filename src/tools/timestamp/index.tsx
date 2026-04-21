@@ -1,14 +1,15 @@
 'use client'
 
 import { useState } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { unixToDate, dateToUnix, nowUnix } from './logic'
 
 export default function TimestampConverter() {
-  const [unix, setUnix] = useState('')
-  const [date, setDate] = useState('')
+  const [unix, setUnix] = usePersistedState('tool:timestamp:unix', '')
+  const [date, setDate] = usePersistedState('tool:timestamp:date', '')
   const [unixResult, setUnixResult] = useState('')
   const [dateResult, setDateResult] = useState('')
   const [error, setError] = useState('')

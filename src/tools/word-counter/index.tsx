@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { countStats } from './logic'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 
 export default function WordCounter() {
-  const [text, setText] = useState('')
+  const [text, setText] = usePersistedState('tool:word-counter:text', '')
   const stats = useMemo(() => countStats(text), [text])
 
   const items = [

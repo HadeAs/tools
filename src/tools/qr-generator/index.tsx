@@ -1,16 +1,27 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { QRCodeSVG } from 'qrcode.react'
+import { QRCodeCanvas } from 'qrcode.react'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 
 export default function QrGenerator() {
   const [input, setInput] = useState('')
   const [value, setValue] = useState('')
+  const canvasRef = useRef<HTMLDivElement>(null)
 
   const generate = () => setValue(input.trim())
+
+  const download = () => {
+    const canvas = canvasRef.current?.querySelector('canvas')
+    if (!canvas) return
+    const url = canvas.toDataURL('image/png')
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'qrcode.png'
+    a.click()
+  }
 
   return (
     <ToolErrorBoundary>
@@ -23,8 +34,13 @@ export default function QrGenerator() {
           </div>
         </div>
         {value && (
-          <div className="flex justify-center rounded border bg-white p-6">
-            <QRCodeSVG value={value} size={200} />
+          <div className="space-y-3">
+            <div ref={canvasRef} className="flex justify-center rounded border bg-white p-6">
+              <QRCodeCanvas value={value} size={200} />
+            </div>
+            <div className="flex justify-center">
+              <Button variant="outline" onClick={download}>下载 PNG</Button>
+            </div>
           </div>
         )}
       </div>

@@ -1,14 +1,21 @@
 'use client'
 
 import { useState, useMemo } from 'react'
-import { tools, categoryLabels, type ToolCategory } from '@/tools/registry'
+import { tools, categoryLabels, getToolBySlug, type ToolCategory } from '@/tools/registry'
 import { ToolCard } from '@/components/tool-card'
 import { SearchBar } from '@/components/search-bar'
+import { useRecentTools } from '@/hooks/use-recent-tools'
 
 const categories: ToolCategory[] = ['developer', 'text', 'encoding', 'conversion']
 
 export default function HomePage() {
   const [search, setSearch] = useState('')
+  const { recent } = useRecentTools()
+
+  const recentTools = useMemo(
+    () => recent.map(slug => getToolBySlug(slug)).filter(Boolean),
+    [recent]
+  )
 
   const filtered = useMemo(() => {
     if (!search.trim()) return tools
@@ -34,6 +41,16 @@ export default function HomePage() {
       <div className="mb-8 max-w-sm">
         <SearchBar value={search} onChange={setSearch} />
       </div>
+
+      {!search && recentTools.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">最近使用</h2>
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {recentTools.map(tool => tool && <ToolCard key={tool.slug} tool={tool} compact />)}
+          </div>
+        </section>
+      )}
+
       {grouped.length === 0 ? (
         <p className="text-muted-foreground">没有找到与 &quot;{search}&quot; 匹配的工具。</p>
       ) : (

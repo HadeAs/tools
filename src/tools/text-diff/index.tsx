@@ -1,13 +1,14 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { computeDiff } from './logic'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 
 export default function TextDiff() {
-  const [left, setLeft] = useState('')
-  const [right, setRight] = useState('')
+  const [left, setLeft] = usePersistedState('tool:text-diff:left', '')
+  const [right, setRight] = usePersistedState('tool:text-diff:right', '')
 
   const parts = useMemo(() => (left || right) ? computeDiff(left, right) : null, [left, right])
 
