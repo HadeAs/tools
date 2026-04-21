@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next'
 import { tools } from '@/tools/registry'
 
-const BASE_URL = 'https://devtools.vercel.app'
+const BASE_URL = 'https://tools.huangzhicheng.top'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

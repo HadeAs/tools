@@ -10,6 +10,7 @@ const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin']
 export const metadata: Metadata = {
   title: { default: 'DevTools — 在线开发者工具', template: '%s | DevTools' },
   description: '免费的在线开发者工具集合，所有计算均在浏览器本地完成。',
+  metadataBase: new URL('https://tools.huangzhicheng.top'),
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

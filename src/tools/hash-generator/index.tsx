@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
@@ -8,21 +8,26 @@ import { md5Hash, sha1Hash, sha256Hash } from './logic'
 
 const algorithms = ['MD5', 'SHA-1', 'SHA-256'] as const
 type Algorithm = typeof algorithms[number]
+const EMPTY: Record<Algorithm, string> = { MD5: '', 'SHA-1': '', 'SHA-256': '' }
 
 export default function HashGenerator() {
   const [input, setInput] = useState('')
-  const [results, setResults] = useState<Record<Algorithm, string>>({ MD5: '', 'SHA-1': '', 'SHA-256': '' })
+  const [results, setResults] = useState<Record<Algorithm, string>>(EMPTY)
   const [copied, setCopied] = useState<Algorithm | null>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    if (!input) {
-      setResults({ MD5: '', 'SHA-1': '', 'SHA-256': '' })
-      return
-    }
-    const md5 = md5Hash(input)
-    const sha1 = sha1Hash(input)
-    setResults(prev => ({ ...prev, MD5: md5, 'SHA-1': sha1 }))
-    sha256Hash(input).then(sha256 => setResults(prev => ({ ...prev, 'SHA-256': sha256 })))
+    if (timerRef.current) clearTimeout(timerRef.current)
+    if (!input) { setResults(EMPTY); return }
+
+    timerRef.current = setTimeout(() => {
+      const md5 = md5Hash(input)
+      const sha1 = sha1Hash(input)
+      setResults(prev => ({ ...prev, MD5: md5, 'SHA-1': sha1 }))
+      sha256Hash(input).then(sha256 => setResults(prev => ({ ...prev, 'SHA-256': sha256 })))
+    }, 300)
+
+    return () => { if (timerRef.current) clearTimeout(timerRef.current) }
   }, [input])
 
   const copy = async (algo: Algorithm) => {

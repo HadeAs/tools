@@ -51,6 +51,7 @@ export default function NumberBase() {
         </div>
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">数值</p>
+          <p className="text-xs text-muted-foreground">支持负数，如 -255</p>
           <div className="flex gap-2">
             <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && convert()} placeholder={`输入${bases.find(b => b.base === fromBase)?.label}数值...`} className="font-mono" />
             <Button onClick={convert} disabled={!input}>转换</Button>

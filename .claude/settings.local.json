@@ -16,7 +16,10 @@
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools commit -m ' *)",
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add CLAUDE.md)",
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add -A)",
-      "Bash(npx vitest *)"
+      "Bash(npx vitest *)",
+      "Bash(vercel *)",
+      "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add .gitignore)",
+      "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools commit -m 'chore: add .vercel to .gitignore *)"
     ]
   }
 }

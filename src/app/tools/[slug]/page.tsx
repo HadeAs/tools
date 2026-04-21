@@ -6,6 +6,7 @@ import { tools, getToolBySlug, getRelatedTools, categoryLabels } from '@/tools/r
 import { DynamicTool } from '@/components/dynamic-tool'
 import { ToolCard } from '@/components/tool-card'
 import { RecordVisit } from '@/components/record-visit'
+import { CopyLink } from '@/components/copy-link'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -44,14 +45,17 @@ export default async function ToolPage({ params }: Props) {
         <span className="text-foreground">{tool.name}</span>
       </nav>
 
-      <div className="flex items-start gap-3">
-        <div className="rounded-lg bg-primary/10 p-2">
-          <Icon className="h-6 w-6 text-primary" />
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex items-start gap-3">
+          <div className="rounded-lg bg-primary/10 p-2">
+            <Icon className="h-6 w-6 text-primary" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold">{tool.name}</h1>
+            <p className="text-muted-foreground">{tool.description}</p>
+          </div>
         </div>
-        <div>
-          <h1 className="text-2xl font-bold">{tool.name}</h1>
-          <p className="text-muted-foreground">{tool.description}</p>
-        </div>
+        <CopyLink />
       </div>
 
       <RecordVisit slug={slug} />

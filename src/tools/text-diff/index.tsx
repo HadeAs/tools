@@ -12,6 +12,13 @@ export default function TextDiff() {
 
   const parts = useMemo(() => (left || right) ? computeDiff(left, right) : null, [left, right])
 
+  const stats = useMemo(() => {
+    if (!parts) return null
+    const added = parts.filter(p => p.type === 'added').reduce((s, p) => s + p.value.length, 0)
+    const removed = parts.filter(p => p.type === 'removed').reduce((s, p) => s + p.value.length, 0)
+    return { added, removed }
+  }, [parts])
+
   return (
     <ToolErrorBoundary>
       <div className="space-y-4">
@@ -25,9 +32,16 @@ export default function TextDiff() {
             <Textarea value={right} onChange={e => setRight(e.target.value)} placeholder="修改后文本..." className="min-h-[200px] font-mono text-sm" />
           </div>
         </div>
-        {parts && (
-          <div className="space-y-1">
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">差异结果</p>
+        {parts && stats && (
+          <div className="space-y-2">
+            <div className="flex items-center gap-4 text-xs">
+              <p className="font-medium text-muted-foreground uppercase tracking-wide">差异结果</p>
+              <span className="text-green-700 dark:text-green-400">+{stats.added} 字符</span>
+              <span className="text-red-700 dark:text-red-400">-{stats.removed} 字符</span>
+              {stats.added === 0 && stats.removed === 0 && (
+                <span className="text-muted-foreground">无差异</span>
+              )}
+            </div>
             <div className="rounded-md border bg-muted/30 p-4 font-mono text-sm leading-relaxed whitespace-pre-wrap break-words">
               {parts.map((part, i) => (
                 <span
