@@ -2,20 +2,21 @@ import { describe, it, expect } from 'vitest'
 import { parseCron } from './logic'
 
 describe('cron-parser', () => {
-  it('parses a standard cron expression', () => {
+  it('describes every-minute as plain Chinese', () => {
+    expect(parseCron('* * * * *').description).toBe('每分钟执行一次')
+  })
+  it('describes step syntax concisely', () => {
+    expect(parseCron('*/15 * * * *').description).toBe('每 15 分钟执行一次')
+  })
+  it('parses a specific schedule', () => {
     const result = parseCron('0 9 * * 1')
-    expect(result.description).toContain('分钟 0')
-    expect(result.description).toContain('小时 9')
+    expect(result.description).toContain('9 时')
+    expect(result.description).toContain('周一')
   })
   it('returns 5 next run times', () => {
-    const result = parseCron('* * * * *')
-    expect(result.nextRuns.length).toBe(5)
+    expect(parseCron('* * * * *').nextRuns.length).toBe(5)
   })
   it('throws on invalid expression', () => {
     expect(() => parseCron('* * *')).toThrow()
-  })
-  it('handles step syntax', () => {
-    const result = parseCron('*/15 * * * *')
-    expect(result.description).toContain('每 15 分钟')
   })
 })

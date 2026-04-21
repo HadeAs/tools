@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -10,7 +11,7 @@ import { formatJSON, minifyJSON, validateJSON } from './logic'
 const EXAMPLE = '{"name":"DevTools","version":"1.0","features":["format","minify","validate"]}'
 
 export default function JSONFormatter() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = usePersistedState('tool:json-formatter:input', '')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)

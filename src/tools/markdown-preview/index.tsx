@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import remarkGfm from 'remark-gfm'
 import { Textarea } from '@/components/ui/textarea'
 import { ToolErrorBoundary } from '@/components/error-boundary'
@@ -26,7 +26,7 @@ console.log('Hello, World!')
 `
 
 export default function MarkdownPreview() {
-  const [input, setInput] = useState(EXAMPLE)
+  const [input, setInput] = usePersistedState('tool:markdown-preview:input', EXAMPLE)
 
   return (
     <ToolErrorBoundary>

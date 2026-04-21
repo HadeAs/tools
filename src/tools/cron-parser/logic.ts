@@ -3,29 +3,71 @@ export interface CronResult {
   nextRuns: string[]
 }
 
-const FIELD_NAMES = ['分钟', '小时', '日', '月', '星期']
-const WEEKDAYS = ['日', '一', '二', '三', '四', '五', '六']
+const WEEKDAYS = ['周日', '周一', '周二', '周三', '周四', '周五', '周六']
 const MONTHS = ['', '1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
 
-function describeField(value: string, index: number): string {
-  if (value === '*') return `每${FIELD_NAMES[index]}`
-  if (value.startsWith('*/')) return `每 ${value.slice(2)} ${FIELD_NAMES[index]}`
-  if (value.includes('-')) return `${FIELD_NAMES[index]} ${value}`
-  if (value.includes(',')) return `${FIELD_NAMES[index]} ${value}`
-  if (index === 4) return `星期${WEEKDAYS[Number(value)] ?? value}`
-  if (index === 3) return MONTHS[Number(value)] ?? value
-  return `${FIELD_NAMES[index]} ${value}`
+function describeMinute(v: string): string {
+  if (v === '*') return ''
+  if (v.startsWith('*/')) return `每 ${v.slice(2)} 分钟`
+  if (v.includes(',')) return `第 ${v} 分钟`
+  if (v.includes('-')) return `第 ${v} 分钟`
+  return `第 ${v} 分钟`
+}
+
+function describeHour(v: string): string {
+  if (v === '*') return ''
+  if (v.startsWith('*/')) return `每隔 ${v.slice(2)} 小时`
+  if (v.includes(',')) return `${v} 时`
+  if (v.includes('-')) return `${v} 时`
+  return `${v} 时`
+}
+
+function describeDay(v: string): string {
+  if (v === '*') return ''
+  if (v.startsWith('*/')) return `每隔 ${v.slice(2)} 天`
+  if (v.includes(',')) return `每月 ${v} 号`
+  if (v.includes('-')) return `每月 ${v} 号`
+  return `每月 ${v} 号`
+}
+
+function describeMonth(v: string): string {
+  if (v === '*') return ''
+  if (v.startsWith('*/')) return `每隔 ${v.slice(2)} 个月`
+  const n = Number(v)
+  return isNaN(n) ? v : MONTHS[n] ?? v
+}
+
+function describeWeekday(v: string): string {
+  if (v === '*') return ''
+  if (v.includes(',')) return v.split(',').map(w => WEEKDAYS[Number(w)] ?? w).join('/')
+  if (v.includes('-')) return `${WEEKDAYS[Number(v.split('-')[0])] ?? v.split('-')[0]} 至 ${WEEKDAYS[Number(v.split('-')[1])] ?? v.split('-')[1]}`
+  return WEEKDAYS[Number(v)] ?? v
 }
 
 export function parseCron(expression: string): CronResult {
   const parts = expression.trim().split(/\s+/)
   if (parts.length !== 5) throw new Error('Cron 表达式需要 5 个字段：分 时 日 月 周')
 
-  const description = parts.map((p, i) => describeField(p, i)).join('，')
+  const [min, hour, day, month, weekday] = parts
+  const allStar = [min, hour, day, month, weekday].every(p => p === '*')
 
-  const nextRuns = computeNextRuns(parts, 5)
+  let description: string
+  if (allStar) {
+    description = '每分钟执行一次'
+  } else if (min.startsWith('*/') && hour === '*' && day === '*' && month === '*' && weekday === '*') {
+    description = `每 ${min.slice(2)} 分钟执行一次`
+  } else {
+    const segments = [
+      describeMonth(month),
+      describeDay(day),
+      describeWeekday(weekday),
+      describeHour(hour),
+      describeMinute(min),
+    ].filter(Boolean)
+    description = segments.join(' ') + ' 执行'
+  }
 
-  return { description, nextRuns }
+  return { description, nextRuns: computeNextRuns(parts, 5) }
 }
 
 function computeNextRuns(parts: string[], count: number): string[] {

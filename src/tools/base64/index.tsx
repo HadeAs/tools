@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { ToolLayout } from '@/components/tool-layout'
@@ -9,7 +10,7 @@ import { encode, decode } from './logic'
 const EXAMPLE = 'Hello, World!'
 
 export default function Base64Tool() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = usePersistedState('tool:base64:input', '')
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)

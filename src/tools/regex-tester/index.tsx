@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useMemo } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Badge } from '@/components/ui/badge'
@@ -12,9 +13,9 @@ const EXAMPLE_PATTERN = '\\b\\w+@\\w+\\.\\w+\\b'
 const EXAMPLE_INPUT = 'Contact us at hello@example.com or support@devtools.io'
 
 export default function RegexTester() {
-  const [pattern, setPattern] = useState('')
-  const [flags, setFlags] = useState('g')
-  const [input, setInput] = useState('')
+  const [pattern, setPattern] = usePersistedState('tool:regex-tester:pattern', '')
+  const [flags, setFlags] = usePersistedState('tool:regex-tester:flags', 'g')
+  const [input, setInput] = usePersistedState('tool:regex-tester:input', '')
 
   const result = useMemo(() => {
     if (!pattern || !input) return null
