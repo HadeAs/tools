@@ -1,65 +1,53 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import { useState, useMemo } from 'react'
+import { tools, categoryLabels, type ToolCategory } from '@/tools/registry'
+import { ToolCard } from '@/components/tool-card'
+import { SearchBar } from '@/components/search-bar'
+
+const categories: ToolCategory[] = ['developer', 'text', 'encoding', 'conversion']
+
+export default function HomePage() {
+  const [search, setSearch] = useState('')
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return tools
+    const q = search.toLowerCase()
+    return tools.filter(t =>
+      t.name.toLowerCase().includes(q) || t.description.toLowerCase().includes(q)
+    )
+  }, [search])
+
+  const grouped = useMemo(() =>
+    categories
+      .map(cat => ({ category: cat, label: categoryLabels[cat], tools: filtered.filter(t => t.category === cat) }))
+      .filter(g => g.tools.length > 0),
+    [filtered]
+  )
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="container mx-auto max-w-5xl px-4 py-8">
+      <div className="mb-8 space-y-2">
+        <h1 className="text-3xl font-bold tracking-tight">Developer Tools</h1>
+        <p className="text-muted-foreground">A collection of free browser-based tools for developers.</p>
+      </div>
+      <div className="mb-8 max-w-sm">
+        <SearchBar value={search} onChange={setSearch} />
+      </div>
+      {grouped.length === 0 ? (
+        <p className="text-muted-foreground">No tools match &quot;{search}&quot;.</p>
+      ) : (
+        <div className="space-y-8">
+          {grouped.map(({ category, label, tools }) => (
+            <section key={category}>
+              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{label}</h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                {tools.map(tool => <ToolCard key={tool.slug} tool={tool} />)}
+              </div>
+            </section>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      )}
     </div>
-  );
+  )
 }
