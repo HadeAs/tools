@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
@@ -14,14 +14,16 @@ export default function HashGenerator() {
   const [results, setResults] = useState<Record<Algorithm, string>>({ MD5: '', 'SHA-1': '', 'SHA-256': '' })
   const [copied, setCopied] = useState<Algorithm | null>(null)
 
-  const generate = async () => {
-    const [md5, sha1, sha256] = await Promise.all([
-      md5Hash(input),
-      sha1Hash(input),
-      sha256Hash(input),
-    ])
-    setResults({ MD5: md5, 'SHA-1': sha1, 'SHA-256': sha256 })
-  }
+  useEffect(() => {
+    if (!input) {
+      setResults({ MD5: '', 'SHA-1': '', 'SHA-256': '' })
+      return
+    }
+    const md5 = md5Hash(input)
+    const sha1 = sha1Hash(input)
+    setResults(prev => ({ ...prev, MD5: md5, 'SHA-1': sha1 }))
+    sha256Hash(input).then(sha256 => setResults(prev => ({ ...prev, 'SHA-256': sha256 })))
+  }, [input])
 
   const copy = async (algo: Algorithm) => {
     await navigator.clipboard.writeText(results[algo])
@@ -33,10 +35,9 @@ export default function HashGenerator() {
     <ToolErrorBoundary>
       <div className="space-y-4">
         <div className="space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Input</p>
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">输入</p>
           <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="输入要哈希的文本..." className="min-h-[120px] font-mono text-sm" />
         </div>
-        <Button onClick={generate} disabled={!input}>生成哈希</Button>
         {algorithms.some(a => results[a]) && (
           <div className="space-y-3">
             {algorithms.map(algo => results[algo] && (

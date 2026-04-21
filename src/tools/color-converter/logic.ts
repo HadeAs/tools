@@ -1,5 +1,32 @@
 export interface RGB { r: number; g: number; b: number }
 export interface HSL { h: number; s: number; l: number }
+export interface ColorResult { hex: string; rgb: string; hsl: string }
+
+export function parseColor(input: string): ColorResult {
+  const s = input.trim()
+  let rgb: RGB
+
+  const hexMatch = s.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)
+  const rgbMatch = s.match(/^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i)
+  const hslMatch = s.match(/^hsl\(\s*(\d+)\s*,\s*(\d+)%?\s*,\s*(\d+)%?\s*\)$/i)
+
+  if (hexMatch) {
+    rgb = { r: parseInt(hexMatch[1], 16), g: parseInt(hexMatch[2], 16), b: parseInt(hexMatch[3], 16) }
+  } else if (rgbMatch) {
+    rgb = { r: Number(rgbMatch[1]), g: Number(rgbMatch[2]), b: Number(rgbMatch[3]) }
+  } else if (hslMatch) {
+    rgb = hslToRgb(Number(hslMatch[1]), Number(hslMatch[2]), Number(hslMatch[3]))
+  } else {
+    throw new Error('格式无效，支持 #rrggbb、rgb(r,g,b)、hsl(h,s,l)')
+  }
+
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b)
+  return {
+    hex: rgbToHex(rgb.r, rgb.g, rgb.b),
+    rgb: `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`,
+    hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+  }
+}
 
 export function hexToRgb(hex: string): RGB {
   const match = hex.match(/^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i)

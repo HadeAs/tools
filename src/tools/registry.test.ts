@@ -9,7 +9,7 @@ describe('registry', () => {
 
   it('getToolBySlug returns correct tool', () => {
     const tool = getToolBySlug('json-formatter')
-    expect(tool?.name).toBe('JSON Formatter')
+    expect(tool?.name).toBe('JSON 格式化')
   })
 
   it('getToolBySlug returns undefined for unknown slug', () => {

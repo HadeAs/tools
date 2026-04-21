@@ -20,6 +20,9 @@ const dynamicTools: Record<string, ComponentType> = {
   'jwt-decoder': dynamic(() => import('@/tools/jwt-decoder'), { ssr: false, loading }),
   'qr-generator': dynamic(() => import('@/tools/qr-generator'), { ssr: false, loading }),
   'color-converter': dynamic(() => import('@/tools/color-converter'), { ssr: false, loading }),
+  'uuid-generator': dynamic(() => import('@/tools/uuid-generator'), { ssr: false, loading }),
+  'number-base': dynamic(() => import('@/tools/number-base'), { ssr: false, loading }),
+  'cron-parser': dynamic(() => import('@/tools/cron-parser'), { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {

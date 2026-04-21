@@ -2,12 +2,19 @@ import { describe, it, expect } from 'vitest'
 import { countStats } from './logic'
 
 describe('countStats', () => {
-  it('counts words', () => expect(countStats('hello world').words).toBe(2))
+  it('counts latin words', () => expect(countStats('hello world').words).toBe(2))
   it('counts characters', () => expect(countStats('hello').chars).toBe(5))
   it('counts lines', () => expect(countStats('a\nb\nc').lines).toBe(3))
   it('handles empty string', () => {
     expect(countStats('').words).toBe(0)
     expect(countStats('').chars).toBe(0)
   })
-  it('counts sentences', () => expect(countStats('Hello. World!').sentences).toBe(2))
+  it('counts sentences with latin punctuation', () => expect(countStats('Hello. World!').sentences).toBe(2))
+  it('counts chinese characters', () => expect(countStats('你好世界').chineseChars).toBe(4))
+  it('counts sentences with chinese punctuation', () => expect(countStats('你好。世界！').sentences).toBe(2))
+  it('mixed chinese and latin', () => {
+    const stats = countStats('hello 你好 world')
+    expect(stats.words).toBe(2)
+    expect(stats.chineseChars).toBe(2)
+  })
 })

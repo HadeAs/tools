@@ -15,7 +15,8 @@
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add src/tools/hash-generator/logic.ts src/tools/hash-generator/index.tsx src/tools/jwt-decoder/logic.ts src/tools/jwt-decoder/index.tsx src/tools/color-converter/logic.ts src/tools/color-converter/index.tsx src/tools/qr-generator/index.tsx src/app/globals.css package.json package-lock.json)",
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools commit -m ' *)",
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add CLAUDE.md)",
-      "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add -A)"
+      "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add -A)",
+      "Bash(npx vitest *)"
     ]
   }
 }

@@ -2,6 +2,7 @@ import {
   Code2, Key, Link, Regex, Clock,
   Eye, AlignLeft, FileText, CaseSensitive,
   Lock, Hash as HashIcon, QrCode, Palette,
+  Fingerprint, Binary, CalendarClock,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -29,6 +30,9 @@ export const tools: ToolMeta[] = [
   { slug: 'jwt-decoder', name: 'JWT 解析器', description: '解析并查看 JWT Token 内容', category: 'encoding', icon: HashIcon },
   { slug: 'qr-generator', name: '二维码生成器', description: '将文本或 URL 生成二维码', category: 'encoding', icon: QrCode },
   { slug: 'color-converter', name: '颜色转换器', description: '在 HEX、RGB 和 HSL 格式之间转换颜色', category: 'conversion', icon: Palette },
+  { slug: 'uuid-generator', name: 'UUID 生成器', description: '生成 UUID v4 随机标识符', category: 'developer', icon: Fingerprint },
+  { slug: 'number-base', name: '进制转换', description: '在二进制、八进制、十进制、十六进制之间转换', category: 'conversion', icon: Binary },
+  { slug: 'cron-parser', name: 'Cron 解析器', description: '解析 Cron 表达式并显示下次执行时间', category: 'developer', icon: CalendarClock },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {
