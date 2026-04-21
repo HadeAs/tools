@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -12,6 +12,8 @@ export default function ColorConverter() {
   const [error, setError] = useState('')
   const [result, setResult] = useState<ColorResult | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
+
+  useEffect(() => { if (input) convert(input) }, [])
 
   const convert = (value = input) => {
     try {
@@ -42,7 +44,7 @@ export default function ColorConverter() {
           <p className="text-xs text-muted-foreground">支持 #rrggbb、rgb(r,g,b)、hsl(h,s,l)，或直接用取色器选色</p>
           <div className="flex gap-2">
             <label
-              className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border overflow-hidden"
+              className="relative flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-lg border overflow-hidden"
               title="取色器"
             >
               <input

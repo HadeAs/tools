@@ -35,4 +35,13 @@ describe('parseColor', () => {
   it('throws on invalid input', () => {
     expect(() => parseColor('notacolor')).toThrow()
   })
+  it('throws on rgb out of range', () => {
+    expect(() => parseColor('rgb(256, 0, 0)')).toThrow()
+    expect(() => parseColor('rgb(0, 300, 0)')).toThrow()
+  })
+  it('throws on hsl out of range', () => {
+    expect(() => parseColor('hsl(361, 50, 50)')).toThrow()
+    expect(() => parseColor('hsl(0, 101, 50)')).toThrow()
+    expect(() => parseColor('hsl(0, 50, 101)')).toThrow()
+  })
 })
