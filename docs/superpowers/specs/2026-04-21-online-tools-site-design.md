@@ -24,6 +24,7 @@ A public-facing online tools collection website targeting developers. All tools 
 | Framework | Next.js 15 (App Router) + TypeScript |
 | Styling | Tailwind CSS + shadcn/ui |
 | Deployment | Vercel |
+| Theme | next-themes (handles dark mode + FOUC prevention via inline script in root layout) |
 | State | React local state (no global state library needed initially) |
 
 ---
@@ -42,7 +43,8 @@ src/
 │   │   └── layout.tsx            # Shared tool layout
 │   └── layout.tsx                # Root layout (header, theme provider)
 ├── tools/                        # Tool definitions and implementations
-│   ├── registry.ts               # Central tool registry (metadata)
+│   ├── registry.ts               # Central tool registry (metadata only, no components)
+│   ├── components.ts             # slug → dynamic import map (for code splitting)
 │   ├── json-formatter/
 │   │   ├── index.tsx             # Tool UI component
 │   │   └── logic.ts              # Pure functions (no React, easy to test)
@@ -57,20 +59,23 @@ src/
 
 ### Tool Registry
 
-`src/tools/registry.ts` is the single source of truth for all tools. Each entry contains:
+`src/tools/registry.ts` stores metadata only — no component imports. This keeps the registry tree-shakeable and bundle-safe.
 
 ```ts
-type Tool = {
+type ToolCategory = 'developer' | 'text' | 'conversion' | 'encoding';
+
+type ToolMeta = {
   slug: string;          // URL: /tools/<slug>
   name: string;
   description: string;   // One-sentence summary
   category: ToolCategory;
-  icon: string;          // Lucide icon name
-  component: React.ComponentType;
+  icon: React.ComponentType; // Imported directly from lucide-react per entry
 }
 ```
 
-Adding a new tool = one registry entry + one implementation file. No changes to routing, navigation, or SEO config.
+Tool components are resolved separately via `src/tools/components.ts`, a `Record<string, () => Promise<...>>` dynamic import map. The tool page does `const Component = lazy(() => components[slug]())`.
+
+Adding a new tool = one registry entry + one implementation file + one line in `components.ts`. No changes to routing, navigation, or SEO config.
 
 ### Static Generation
 
@@ -101,9 +106,13 @@ Adding a new tool = one registry entry + one implementation file. No changes to 
 | Slug | Tool |
 |---|---|
 | `hash-generator` | MD5 / SHA-1 / SHA-256 hash |
-| `color-converter` | HEX ↔ RGB ↔ HSL |
-| `qr-generator` | QR code generator |
 | `jwt-decoder` | JWT decode and inspect |
+| `qr-generator` | QR code generator |
+
+### Conversion
+| Slug | Tool |
+|---|---|
+| `color-converter` | HEX ↔ RGB ↔ HSL color format conversion |
 
 ---
 
@@ -120,16 +129,17 @@ Adding a new tool = one registry entry + one implementation file. No changes to 
 - Tool name + description at top
 - Main area: input panel → output panel (layout adapts per tool: side-by-side on desktop, stacked on mobile)
 - Action buttons: Copy, Clear, Load Example
-- Bottom: "Related Tools" strip (3–4 cards from same category)
+- Bottom: "Related Tools" strip — up to 4 cards from the same category; if fewer than 2 exist in the category, fill remaining slots with tools from other categories
 
 ---
 
 ## UI & Design
 
 - **Style:** Minimal, high-density developer aesthetic (inspired by transform.tools / it-tools)
-- **Theme:** Light / dark mode toggle, persisted via `localStorage`
+- **Theme:** Light / dark mode toggle via `next-themes`; persisted in `localStorage`; FOUC prevented by next-themes' inline script injected into root layout
 - **Components:** shadcn/ui primitives (Button, Textarea, Badge, Tabs, etc.)
-- **No login, no user accounts, no analytics initially**
+- **No login, no user accounts**
+- **Error handling:** Each tool wraps its main area in a React error boundary that catches runtime errors and shows an inline "Something went wrong" fallback (no page crash)
 
 ---
 
@@ -147,4 +157,4 @@ When a tool needs backend processing (file conversion, AI features, etc.):
 - Saving history or favorites
 - Paid/premium tools
 - i18n / multi-language
-- Analytics
+- Analytics / telemetry
