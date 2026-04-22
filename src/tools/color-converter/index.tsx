@@ -1,34 +1,21 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
-import { parseColor, type ColorResult } from './logic'
+import { parseColor } from './logic'
 
 export default function ColorConverter() {
   const [input, setInput] = usePersistedState('tool:color-converter:input', '')
-  const [error, setError] = useState('')
-  const [result, setResult] = useState<ColorResult | null>(null)
   const [copied, setCopied] = useState<string | null>(null)
 
-  useEffect(() => { if (input) convert(input) }, [])
-
-  const convert = (value = input) => {
-    try {
-      setResult(parseColor(value))
-      setError('')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : '无效颜色')
-      setResult(null)
-    }
-  }
-
-  const onPickerChange = (hex: string) => {
-    setInput(hex)
-    convert(hex)
-  }
+  const { result, error } = useMemo(() => {
+    if (!input.trim()) return { result: null, error: '' }
+    try { return { result: parseColor(input.trim()), error: '' } }
+    catch (e) { return { result: null, error: e instanceof Error ? e.message : '无效颜色' } }
+  }, [input])
 
   const copy = async (val: string) => {
     await navigator.clipboard.writeText(val)
@@ -51,21 +38,16 @@ export default function ColorConverter() {
                 type="color"
                 className="h-full w-full cursor-pointer border-none p-0 opacity-0 absolute"
                 value={result?.hex ?? '#ffffff'}
-                onChange={e => onPickerChange(e.target.value)}
+                onChange={e => setInput(e.target.value)}
               />
-              <div
-                className="h-full w-full"
-                style={{ backgroundColor: result?.hex ?? '#ffffff' }}
-              />
+              <div className="h-full w-full" style={{ backgroundColor: result?.hex ?? '#ffffff' }} />
             </label>
             <Input
               value={input}
               onChange={e => setInput(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && convert()}
               placeholder="#ff0000 / rgb(255,0,0) / hsl(0,100,50)"
               className="font-mono text-sm"
             />
-            <Button onClick={() => convert()} disabled={!input}>转换</Button>
           </div>
         </div>
         {error && <p className="text-sm text-destructive">{error}</p>}
