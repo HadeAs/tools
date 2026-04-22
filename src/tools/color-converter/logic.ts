@@ -13,9 +13,14 @@ export function parseColor(input: string): ColorResult {
   if (hexMatch) {
     rgb = { r: parseInt(hexMatch[1], 16), g: parseInt(hexMatch[2], 16), b: parseInt(hexMatch[3], 16) }
   } else if (rgbMatch) {
-    rgb = { r: Number(rgbMatch[1]), g: Number(rgbMatch[2]), b: Number(rgbMatch[3]) }
+    const [r, g, b] = [Number(rgbMatch[1]), Number(rgbMatch[2]), Number(rgbMatch[3])]
+    if (r > 255 || g > 255 || b > 255) throw new Error('RGB 值必须在 0–255 之间')
+    rgb = { r, g, b }
   } else if (hslMatch) {
-    rgb = hslToRgb(Number(hslMatch[1]), Number(hslMatch[2]), Number(hslMatch[3]))
+    const [h, s, l] = [Number(hslMatch[1]), Number(hslMatch[2]), Number(hslMatch[3])]
+    if (h > 360) throw new Error('H 值必须在 0–360 之间')
+    if (s > 100 || l > 100) throw new Error('S/L 值必须在 0–100 之间')
+    rgb = hslToRgb(h, s, l)
   } else {
     throw new Error('格式无效，支持 #rrggbb、rgb(r,g,b)、hsl(h,s,l)')
   }

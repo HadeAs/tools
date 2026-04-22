@@ -3,6 +3,7 @@ import {
   Eye, AlignLeft, FileText, CaseSensitive,
   Lock, Hash as HashIcon, QrCode, Palette,
   Fingerprint, Binary, CalendarClock,
+  ShieldCheck, FileCode, Table, Image, Ruler, Type,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -32,7 +33,13 @@ export const tools: ToolMeta[] = [
   { slug: 'color-converter', name: '颜色转换器', description: '在 HEX、RGB 和 HSL 格式之间转换颜色', category: 'conversion', icon: Palette },
   { slug: 'uuid-generator', name: 'UUID 生成器', description: '生成 UUID v4 随机标识符', category: 'developer', icon: Fingerprint },
   { slug: 'number-base', name: '进制转换', description: '在二进制、八进制、十进制、十六进制之间转换', category: 'conversion', icon: Binary },
-  { slug: 'cron-parser', name: 'Cron 解析器', description: '解析 Cron 表达式并显示下次执行时间', category: 'developer', icon: CalendarClock },
+  { slug: 'cron-parser',        name: 'Cron 解析器',    description: '解析 Cron 表达式并显示下次执行时间',  category: 'developer',  icon: CalendarClock },
+  { slug: 'password-generator', name: '密码生成器',     description: '生成安全随机密码，可配置长度与字符类型', category: 'developer',  icon: ShieldCheck },
+  { slug: 'html-entities',      name: 'HTML 实体编码',  description: 'HTML 特殊字符编码与解码',              category: 'encoding',   icon: FileCode },
+  { slug: 'json-csv',           name: 'JSON / CSV 转换', description: 'JSON 数组与 CSV 格式互转',            category: 'conversion', icon: Table },
+  { slug: 'image-base64',       name: '图片转 Base64',  description: '上传图片并输出 Base64 Data URL',       category: 'encoding',   icon: Image },
+  { slug: 'css-units',          name: 'CSS 单位换算',   description: 'px / rem / em / vw / vh / pt 互转',   category: 'conversion', icon: Ruler },
+  { slug: 'lorem-ipsum',        name: 'Lorem Ipsum',    description: '生成中英文占位文本，支持单词/句子/段落', category: 'text',       icon: Type },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {

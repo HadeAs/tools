@@ -22,7 +22,13 @@ const dynamicTools: Record<string, ComponentType> = {
   'color-converter': dynamic(() => import('@/tools/color-converter'), { ssr: false, loading }),
   'uuid-generator': dynamic(() => import('@/tools/uuid-generator'), { ssr: false, loading }),
   'number-base': dynamic(() => import('@/tools/number-base'), { ssr: false, loading }),
-  'cron-parser': dynamic(() => import('@/tools/cron-parser'), { ssr: false, loading }),
+  'cron-parser':        dynamic(() => import('@/tools/cron-parser'),        { ssr: false, loading }),
+  'password-generator': dynamic(() => import('@/tools/password-generator'), { ssr: false, loading }),
+  'html-entities':      dynamic(() => import('@/tools/html-entities'),      { ssr: false, loading }),
+  'json-csv':           dynamic(() => import('@/tools/json-csv'),           { ssr: false, loading }),
+  'image-base64':       dynamic(() => import('@/tools/image-base64'),       { ssr: false, loading }),
+  'css-units':          dynamic(() => import('@/tools/css-units'),          { ssr: false, loading }),
+  'lorem-ipsum':        dynamic(() => import('@/tools/lorem-ipsum'),        { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {
