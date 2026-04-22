@@ -4,6 +4,7 @@ import {
   Lock, Hash as HashIcon, QrCode, Palette,
   Fingerprint, Binary, CalendarClock,
   ShieldCheck, FileCode, Table, Image, Ruler, Type,
+  ArrowLeftRight, Globe, List, Server, Scale,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -40,6 +41,11 @@ export const tools: ToolMeta[] = [
   { slug: 'image-base64',       name: '图片转 Base64',  description: '上传图片并输出 Base64 Data URL',       category: 'encoding',   icon: Image },
   { slug: 'css-units',          name: 'CSS 单位换算',   description: 'px / rem / em / vw / vh / pt 互转',   category: 'conversion', icon: Ruler },
   { slug: 'lorem-ipsum',        name: 'Lorem Ipsum',    description: '生成中英文占位文本，支持单词/句子/段落', category: 'text',       icon: Type },
+  { slug: 'yaml-json',          name: 'YAML / JSON 转换', description: 'YAML 与 JSON 格式互转',               category: 'conversion', icon: ArrowLeftRight },
+  { slug: 'url-parser',         name: 'URL 解析器',      description: '解析 URL 各组成部分及查询参数',         category: 'developer',  icon: Globe },
+  { slug: 'line-tools',         name: '行操作工具',      description: '排序、去重、删除空行、反转、打乱行',     category: 'text',       icon: List },
+  { slug: 'http-status',        name: 'HTTP 状态码',     description: '查询 HTTP 状态码含义与说明',            category: 'developer',  icon: Server },
+  { slug: 'unit-converter',     name: '单位换算',        description: '长度、重量、温度、数据存储单位互转',     category: 'conversion', icon: Scale },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {

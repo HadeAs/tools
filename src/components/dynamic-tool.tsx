@@ -29,6 +29,11 @@ const dynamicTools: Record<string, ComponentType> = {
   'image-base64':       dynamic(() => import('@/tools/image-base64'),       { ssr: false, loading }),
   'css-units':          dynamic(() => import('@/tools/css-units'),          { ssr: false, loading }),
   'lorem-ipsum':        dynamic(() => import('@/tools/lorem-ipsum'),        { ssr: false, loading }),
+  'yaml-json':          dynamic(() => import('@/tools/yaml-json'),          { ssr: false, loading }),
+  'url-parser':         dynamic(() => import('@/tools/url-parser'),         { ssr: false, loading }),
+  'line-tools':         dynamic(() => import('@/tools/line-tools'),         { ssr: false, loading }),
+  'http-status':        dynamic(() => import('@/tools/http-status'),        { ssr: false, loading }),
+  'unit-converter':     dynamic(() => import('@/tools/unit-converter'),     { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {

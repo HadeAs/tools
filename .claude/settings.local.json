@@ -23,7 +23,10 @@
       "Bash(echo \"Server PID: $!\")",
       "Bash(curl -s http://localhost:3000)",
       "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/__TRACKED_VAR__)",
-      "Bash(npx vercel *)"
+      "Bash(npx vercel *)",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(list\\(d['dependencies'].keys\\(\\)\\)\\)\")"
     ]
   }
 }
