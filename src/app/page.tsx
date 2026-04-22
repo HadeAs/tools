@@ -5,6 +5,7 @@ import { tools, categoryLabels, getToolBySlug, type ToolCategory } from '@/tools
 import { ToolCard } from '@/components/tool-card'
 import { SearchBar } from '@/components/search-bar'
 import { useRecentTools } from '@/hooks/use-recent-tools'
+import { useFavorites } from '@/hooks/use-favorites'
 
 const categories: ToolCategory[] = ['developer', 'text', 'encoding', 'conversion']
 
@@ -19,10 +20,16 @@ const categoryAccent: Record<ToolCategory, string> = {
 export default function HomePage() {
   const [search, setSearch] = useState('')
   const { recent } = useRecentTools()
+  const { favorites } = useFavorites()
 
   const recentTools = useMemo(
     () => recent.map(slug => getToolBySlug(slug)).filter(Boolean),
     [recent]
+  )
+
+  const favoriteTools = useMemo(
+    () => favorites.map(slug => getToolBySlug(slug)).filter(Boolean),
+    [favorites]
   )
 
   const filtered = useMemo(() => {
@@ -53,6 +60,17 @@ export default function HomePage() {
           <div className="animate-fade-up-delay mb-8 max-w-md">
             <SearchBar value={search} onChange={setSearch} />
           </div>
+
+          {!search && favoriteTools.length > 0 && (
+            <section className="mb-8">
+              <h2 className="mb-3 flex items-center gap-2 border-l-2 border-amber-400 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
+                收藏
+              </h2>
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+                {favoriteTools.map(tool => tool && <ToolCard key={tool.slug} tool={tool} compact />)}
+              </div>
+            </section>
+          )}
 
           {!search && recentTools.length > 0 && (
             <section className="mb-8">
