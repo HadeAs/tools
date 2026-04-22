@@ -21,4 +21,20 @@ describe('html-entities', () => {
     const original = '<script>alert("xss")</script>'
     expect(decodeEntities(encodeEntities(original))).toBe(original)
   })
+  it('handles empty string', () => {
+    expect(encodeEntities('')).toBe('')
+    expect(decodeEntities('')).toBe('')
+  })
+  it('decodes &nbsp; to non-breaking space', () => {
+    expect(decodeEntities('hello&nbsp;world')).toBe('hello world')
+  })
+  it('decodes &apos; to apostrophe', () => {
+    expect(decodeEntities('it&apos;s')).toBe("it's")
+  })
+  it('plain text passes through encode unchanged', () => {
+    expect(encodeEntities('hello world 123')).toBe('hello world 123')
+  })
+  it('plain text passes through decode unchanged', () => {
+    expect(decodeEntities('hello world 123')).toBe('hello world 123')
+  })
 })

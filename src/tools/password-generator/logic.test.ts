@@ -23,4 +23,17 @@ describe('password-generator', () => {
   })
   it('getStrength: weak for short', () => { expect(getStrength('abc')).toBe('weak') })
   it('getStrength: strong for complex', () => { expect(getStrength('Abc123!@#defGHI')).toBe('strong') })
+  it('getStrength: medium for moderate', () => { expect(getStrength('Abcdef123')).toBe('medium') })
+  it('generates minimum-length password with all 4 types', () => {
+    const pwd = generatePassword({ length: 4, uppercase: true, lowercase: true, numbers: true, symbols: true })
+    expect(pwd).toHaveLength(4)
+    expect(pwd).toMatch(/[A-Z]/)
+    expect(pwd).toMatch(/[a-z]/)
+    expect(pwd).toMatch(/[0-9]/)
+    expect(pwd).toMatch(/[^A-Za-z0-9]/)
+  })
+  it('symbols-only password contains only symbol chars', () => {
+    const pwd = generatePassword({ length: 10, uppercase: false, lowercase: false, numbers: false, symbols: true })
+    expect(pwd).toMatch(/^[!@#$%^&*()\-_=+[\]{}|;:,.<>?]+$/)
+  })
 })

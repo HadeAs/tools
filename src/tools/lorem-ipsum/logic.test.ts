@@ -23,4 +23,18 @@ describe('lorem-ipsum', () => {
     expect(generate('words', 1, 'en')).not.toBe('')
     expect(generate('sentences', 1, 'zh')).not.toBe('')
   })
+  it('generates correct zh word count (no spaces)', () => {
+    const text = generate('words', 8, 'zh')
+    expect([...text].length).toBe(8)
+  })
+  it('generates single word', () => {
+    expect(generate('words', 1, 'en').split(' ')).toHaveLength(1)
+  })
+  it('generates single sentence in zh ending with 。', () => {
+    const text = generate('sentences', 1, 'zh')
+    expect(text.endsWith('。')).toBe(true)
+  })
+  it('generates single paragraph', () => {
+    expect(generate('paragraphs', 1, 'en').split('\n\n')).toHaveLength(1)
+  })
 })

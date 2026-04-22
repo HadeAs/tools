@@ -17,4 +17,15 @@ describe('countStats', () => {
     expect(stats.words).toBe(2)
     expect(stats.chineseChars).toBe(2)
   })
+  it('counts charsNoSpaces', () => {
+    expect(countStats('hello world').charsNoSpaces).toBe(10)
+  })
+  it('charsNoSpaces excludes tabs and newlines', () => {
+    expect(countStats('a\tb\nc').charsNoSpaces).toBe(3)
+  })
+  it('spaces-only input has 0 words and 0 sentences', () => {
+    const stats = countStats('   ')
+    expect(stats.words).toBe(0)
+    expect(stats.sentences).toBe(0)
+  })
 })

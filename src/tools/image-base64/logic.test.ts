@@ -23,4 +23,16 @@ describe('image-base64', () => {
     const dataUrl = 'data:image/png;base64,' + 'AAAA'.repeat(100)
     expect(getApproxSize(dataUrl)).toBe(300)
   })
+  it('formats exactly 1024 bytes as KB', () => {
+    expect(formatSize(1024)).toBe('1.0 KB')
+  })
+  it('formats exactly 1MB', () => {
+    expect(formatSize(1024 * 1024)).toBe('1.00 MB')
+  })
+  it('returns unknown for non-data-url', () => {
+    expect(getMimeType('')).toBe('unknown')
+  })
+  it('getApproxSize returns 0 for data URL with no base64', () => {
+    expect(getApproxSize('data:image/png;base64,')).toBe(0)
+  })
 })

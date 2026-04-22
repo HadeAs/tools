@@ -19,4 +19,24 @@ describe('cron-parser', () => {
   it('throws on invalid expression', () => {
     expect(() => parseCron('* * *')).toThrow()
   })
+  it('describes comma list in minutes', () => {
+    const result = parseCron('0,30 * * * *')
+    expect(result.description).toContain('0,30')
+  })
+  it('describes range in hours', () => {
+    const result = parseCron('0 9-17 * * *')
+    expect(result.description).toContain('9-17')
+  })
+  it('describes a monthly schedule', () => {
+    const result = parseCron('0 0 1 * *')
+    expect(result.description).toContain('1')
+  })
+  it('all nextRuns are in the future', () => {
+    const { nextRuns } = parseCron('* * * * *')
+    const now = Date.now()
+    expect(nextRuns.every(r => new Date(r).getTime() > now - 60000)).toBe(true)
+  })
+  it('returns exactly 5 next runs for specific schedule', () => {
+    expect(parseCron('0 9 * * 1').nextRuns).toHaveLength(5)
+  })
 })

@@ -28,4 +28,18 @@ describe('json-csv', () => {
   it('throws if csv has no data rows', () => {
     expect(() => csvToJson('name,age')).toThrow()
   })
+  it('empty array returns empty string', () => {
+    expect(jsonToCsv('[]')).toBe('')
+  })
+  it('serializes null values via JSON.stringify (outputs "null")', () => {
+    const csv = jsonToCsv('[{"name":null,"age":1}]')
+    expect(csv).toBe('name,age\nnull,1')
+  })
+  it('escapes fields with newlines', () => {
+    const csv = jsonToCsv('[{"a":"line1\\nline2"}]')
+    expect(csv).toContain('"line1\nline2"')
+  })
+  it('throws on invalid JSON input', () => {
+    expect(() => jsonToCsv('not json')).toThrow()
+  })
 })

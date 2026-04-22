@@ -29,4 +29,18 @@ describe('number-base', () => {
   it('throws on binary input with invalid chars', () => {
     expect(() => convertBase('19', 2)).toThrow()
   })
+  it('converts zero', () => {
+    const r = convertBase('0', 10)
+    expect(r.binary).toBe('0')
+    expect(r.hex).toBe('0')
+    expect(r.decimal).toBe('0')
+  })
+  it('converts from octal', () => {
+    expect(convertBase('17', 8).decimal).toBe('15')
+  })
+  it('converts large decimal number', () => {
+    const r = convertBase('65535', 10)
+    expect(r.hex).toBe('FFFF')
+    expect(r.binary).toBe('1111111111111111')
+  })
 })

@@ -44,4 +44,29 @@ describe('parseColor', () => {
     expect(() => parseColor('hsl(0, 101, 50)')).toThrow()
     expect(() => parseColor('hsl(0, 50, 101)')).toThrow()
   })
+  it('white: hsl(0,0,100) -> rgb(255,255,255)', () => {
+    const r = parseColor('hsl(0, 0, 100)')
+    expect(r.rgb).toBe('rgb(255, 255, 255)')
+    expect(r.hex).toBe('#ffffff')
+  })
+  it('black: hsl(0,0,0) -> rgb(0,0,0)', () => {
+    const r = parseColor('hsl(0, 0, 0)')
+    expect(r.rgb).toBe('rgb(0, 0, 0)')
+    expect(r.hex).toBe('#000000')
+  })
+  it('grayscale preserves hue=0 and s=0', () => {
+    const hsl = rgbToHsl(128, 128, 128)
+    expect(hsl.s).toBe(0)
+    expect(hsl.h).toBe(0)
+  })
+  it('pure green rgb->hsl', () => {
+    const hsl = rgbToHsl(0, 255, 0)
+    expect(hsl.h).toBe(120)
+    expect(hsl.s).toBe(100)
+    expect(hsl.l).toBe(50)
+  })
+  it('pure blue rgb->hsl', () => {
+    const hsl = rgbToHsl(0, 0, 255)
+    expect(hsl.h).toBe(240)
+  })
 })

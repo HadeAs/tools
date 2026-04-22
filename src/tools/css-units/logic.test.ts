@@ -28,4 +28,39 @@ describe('css-units', () => {
     const r = convertAll({ value: 42, from: 'px', ...base })
     expect(r.px).toBeCloseTo(42)
   })
+  it('em to px (same as rem with base 16)', () => {
+    const r = convertAll({ value: 2, from: 'em', ...base })
+    expect(r.px).toBeCloseTo(32)
+  })
+  it('vh to px', () => {
+    const r = convertAll({ value: 50, from: 'vh', ...base })
+    expect(r.px).toBeCloseTo(450)
+  })
+  it('% to px (relative to base font size)', () => {
+    const r = convertAll({ value: 200, from: '%', ...base })
+    expect(r.px).toBeCloseTo(32)
+  })
+  it('zero value stays zero', () => {
+    const r = convertAll({ value: 0, from: 'px', ...base })
+    expect(r.rem).toBe(0)
+    expect(r.vw).toBe(0)
+  })
+})
+
+import { fmt } from './logic'
+
+describe('fmt', () => {
+  it('formats integer-like values cleanly', () => {
+    expect(fmt(1)).toBe('1')
+    expect(fmt(16)).toBe('16')
+  })
+  it('trims trailing zeros', () => {
+    expect(fmt(1.5)).toBe('1.5')
+  })
+  it('uses toPrecision for small values (trailing zeros stripped)', () => {
+    expect(fmt(0.001)).toBe('0.001')
+  })
+  it('uses toFixed(2) for large values', () => {
+    expect(fmt(1234)).toBe('1234.00')
+  })
 })
