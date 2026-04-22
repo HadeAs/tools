@@ -9,15 +9,26 @@ import { useRecentTools } from '@/hooks/use-recent-tools'
 
 const categories: ToolCategory[] = ['developer', 'text', 'encoding', 'conversion']
 
+const categoryAccent: Record<ToolCategory, string> = {
+  developer: 'accent-developer',
+  text:      'accent-text',
+  encoding:  'accent-encoding',
+  conversion:'accent-conversion',
+}
+
 function DonationCard() {
   return (
-    <div className="rounded-xl border bg-card p-4 text-center shadow-sm">
-      <p className="mb-1 text-sm font-semibold">支持一下</p>
-      <p className="mb-3 text-xs text-muted-foreground">如果这些工具对你有帮助，可以请作者喝杯咖啡 ☕</p>
-      <div className="overflow-hidden rounded-lg border">
-        <Image src="/pay.png" alt="收款码" width={200} height={215} className="w-full object-cover" />
+    <div className="overflow-hidden rounded-xl border bg-card shadow-sm">
+      <div className="bg-gradient-to-br from-primary/10 via-primary/5 to-transparent px-4 pb-3 pt-4">
+        <p className="font-mono text-sm font-bold tracking-tight">支持一下</p>
+        <p className="mt-0.5 text-xs text-muted-foreground">如果这些工具对你有帮助 ☕</p>
       </div>
-      <p className="mt-2 text-xs text-muted-foreground">扫码打赏，感谢支持！</p>
+      <div className="p-3">
+        <div className="overflow-hidden rounded-lg border">
+          <Image src="/pay.png" alt="收款码" width={200} height={215} className="w-full object-cover" />
+        </div>
+        <p className="mt-2 text-center text-xs text-muted-foreground">扫码打赏，感谢支持！</p>
+      </div>
     </div>
   )
 }
@@ -50,17 +61,22 @@ export default function HomePage() {
     <div className="container mx-auto max-w-6xl px-4 py-8">
       <div className="flex gap-8">
         <div className="min-w-0 flex-1">
-          <div className="mb-8 space-y-2">
+          {/* Hero */}
+          <div className="hero-bg animate-fade-up mb-8 rounded-2xl px-6 py-8">
             <h1 className="text-3xl font-bold tracking-tight">在线开发者工具</h1>
-            <p className="text-muted-foreground">免费的在线开发者工具集合，所有计算均在浏览器本地完成。</p>
+            <p className="mt-2 text-muted-foreground">免费的在线开发者工具集合，所有计算均在浏览器本地完成。</p>
           </div>
-          <div className="mb-8 max-w-sm">
+
+          {/* Search */}
+          <div className="animate-fade-up-delay mb-8 max-w-md">
             <SearchBar value={search} onChange={setSearch} />
           </div>
 
           {!search && recentTools.length > 0 && (
             <section className="mb-8">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">最近使用</h2>
+              <h2 className="mb-3 border-l-2 border-primary/40 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
+                最近使用
+              </h2>
               <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 {recentTools.map(tool => tool && <ToolCard key={tool.slug} tool={tool} compact />)}
               </div>
@@ -73,7 +89,9 @@ export default function HomePage() {
             <div className="space-y-8">
               {grouped.map(({ category, label, tools }) => (
                 <section key={category}>
-                  <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">{label}</h2>
+                  <h2 className={`mb-3 border-l-2 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60 ${categoryAccent[category]}`}>
+                    {label}
+                  </h2>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {tools.map(tool => <ToolCard key={tool.slug} tool={tool} />)}
                   </div>
