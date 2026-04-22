@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { generatePassword, getStrength, type Strength } from './logic'
@@ -13,19 +13,20 @@ const CHAR_OPTS = [
 ] as const
 
 const strengthStyle: Record<Strength, { label: string; bar: string; text: string }> = {
-  weak:   { label: '弱',  bar: 'w-1/3 bg-red-500',   text: 'text-red-500' },
-  medium: { label: '中',  bar: 'w-2/3 bg-amber-500', text: 'text-amber-500' },
-  strong: { label: '强',  bar: 'w-full bg-green-500', text: 'text-green-500' },
+  weak:   { label: '弱', bar: 'w-1/3 bg-red-500',    text: 'text-red-500'    },
+  medium: { label: '中', bar: 'w-2/3 bg-amber-500',  text: 'text-amber-500'  },
+  strong: { label: '强', bar: 'w-full bg-green-500', text: 'text-green-500'  },
 }
 
 export default function PasswordGenerator() {
   const [length, setLength] = useState(16)
-  const [opts, setOpts] = useState({ uppercase: true, lowercase: true, numbers: true, symbols: false })
+  const [opts, setOpts]     = useState({ uppercase: true, lowercase: true, numbers: true, symbols: false })
   const [password, setPassword] = useState('')
-  const [error, setError] = useState('')
+  const [error, setError]   = useState('')
   const [copied, setCopied] = useState(false)
+  const [tick, setTick]     = useState(0)  // bumped to re-roll with same settings
 
-  const generate = useCallback(() => {
+  const roll = useCallback(() => {
     try {
       setPassword(generatePassword({ length, ...opts }))
       setError('')
@@ -34,6 +35,8 @@ export default function PasswordGenerator() {
       setPassword('')
     }
   }, [length, opts])
+
+  useEffect(() => { roll() }, [roll, tick])
 
   const copy = async () => {
     await navigator.clipboard.writeText(password)
@@ -74,16 +77,16 @@ export default function PasswordGenerator() {
           </div>
         </div>
 
-        <Button onClick={generate} className="w-full">生成密码</Button>
         {error && <p className="text-sm text-destructive">{error}</p>}
 
         {password && (
           <div className="space-y-3">
             <div className="flex gap-2">
               <code className="flex-1 break-all rounded border bg-muted px-3 py-2 font-mono text-sm">{password}</code>
-              <Button variant="outline" size="sm" onClick={copy} className="shrink-0 self-start">
-                {copied ? '已复制！' : '复制'}
-              </Button>
+              <div className="flex shrink-0 flex-col gap-1 self-start">
+                <Button variant="outline" size="sm" onClick={copy}>{copied ? '已复制！' : '复制'}</Button>
+                <Button variant="ghost" size="sm" onClick={() => setTick(t => t + 1)}>刷新</Button>
+              </div>
             </div>
             {strength && (
               <div className="space-y-1">

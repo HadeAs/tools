@@ -1,59 +1,67 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { toCamel, toPascal, toSnake, toKebab, toUpper, toLower } from './logic'
 
 const conversions = [
-  { label: 'camelCase', fn: toCamel },
+  { label: 'camelCase',  fn: toCamel },
   { label: 'PascalCase', fn: toPascal },
   { label: 'snake_case', fn: toSnake },
   { label: 'kebab-case', fn: toKebab },
   { label: 'UPPER_CASE', fn: toUpper },
-  { label: 'lowercase', fn: toLower },
+  { label: 'lowercase',  fn: toLower },
 ]
 
 export default function CaseConverter() {
   const [input, setInput] = usePersistedState('tool:case-converter:input', '')
-  const [output, setOutput] = useState('')
-  const [activeLabel, setActiveLabel] = useState('')
-  const [copied, setCopied] = useState(false)
+  const [copied, setCopied] = useState<string | null>(null)
 
-  const convert = (label: string, fn: (s: string) => string) => {
-    setOutput(fn(input))
-    setActiveLabel(label)
-  }
+  const results = useMemo(() =>
+    input.trim()
+      ? conversions.map(({ label, fn }) => ({ label, result: fn(input) }))
+      : null,
+    [input]
+  )
 
-  const copyOutput = async () => {
-    await navigator.clipboard.writeText(output)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 1500)
+  const copy = async (text: string, label: string) => {
+    await navigator.clipboard.writeText(text)
+    setCopied(label)
+    setTimeout(() => setCopied(null), 1500)
   }
 
   return (
     <ToolErrorBoundary>
       <div className="space-y-4">
         <div className="space-y-1">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Input</p>
-          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="输入要转换的文本..." className="min-h-[120px] font-mono text-sm" />
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">输入</p>
+          <Textarea
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="输入要转换的文本..."
+            className="min-h-[100px] font-mono text-sm"
+          />
         </div>
-        <div className="flex flex-wrap gap-2">
-          {conversions.map(({ label, fn }) => (
-            <Button key={label} variant={activeLabel === label ? 'default' : 'outline'} onClick={() => convert(label, fn)} disabled={!input} className="font-mono">
-              {label}
-            </Button>
-          ))}
-        </div>
-        {output && (
-          <div className="space-y-2">
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Output</p>
-              <Textarea readOnly value={output} className="min-h-[120px] font-mono text-sm" />
-            </div>
-            <Button variant="outline" size="sm" onClick={copyOutput}>{copied ? '已复制！' : '复制'}</Button>
+        {results && (
+          <div className="grid gap-2 sm:grid-cols-2">
+            {results.map(({ label, result }) => (
+              <div key={label} className="space-y-1">
+                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{label}</p>
+                <div className="flex gap-2">
+                  <code className="flex-1 overflow-auto rounded border bg-muted px-3 py-2 text-sm font-mono break-all">
+                    {result}
+                  </code>
+                  <button
+                    onClick={() => copy(result, label)}
+                    className="shrink-0 rounded border px-2 text-xs text-muted-foreground transition-colors hover:border-primary hover:text-foreground"
+                  >
+                    {copied === label ? '✓' : '复制'}
+                  </button>
+                </div>
+              </div>
+            ))}
           </div>
         )}
       </div>

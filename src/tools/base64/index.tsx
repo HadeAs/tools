@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -11,16 +11,19 @@ const EXAMPLE = 'Hello, World!'
 
 export default function Base64Tool() {
   const [input, setInput] = usePersistedState('tool:base64:input', '')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
+  const [mode, setMode] = useState<'encode' | 'decode'>('encode')
   const [copied, setCopied] = useState(false)
 
-  const handle = (fn: (s: string) => string) => {
-    try { setOutput(fn(input)); setError('') }
-    catch (e) { setError((e as Error).message); setOutput('') }
-  }
+  const { output, error } = useMemo(() => {
+    if (!input.trim()) return { output: '', error: '' }
+    try {
+      return { output: mode === 'encode' ? encode(input) : decode(input), error: '' }
+    } catch (e) {
+      return { output: '', error: (e as Error).message }
+    }
+  }, [input, mode])
 
-  const copyOutput = async () => {
+  const copy = async () => {
     await navigator.clipboard.writeText(output)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
@@ -44,11 +47,11 @@ export default function Base64Tool() {
       }
       actions={
         <>
-          <Button onClick={() => handle(encode)} disabled={!input}>编码</Button>
-          <Button variant="outline" onClick={() => handle(decode)} disabled={!input}>解码</Button>
-          <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? '已复制！' : '复制'}</Button>
+          <Button variant={mode === 'encode' ? 'default' : 'outline'} onClick={() => setMode('encode')}>编码</Button>
+          <Button variant={mode === 'decode' ? 'default' : 'outline'} onClick={() => setMode('decode')}>解码</Button>
+          <Button variant="outline" onClick={copy} disabled={!output}>{copied ? '已复制！' : '复制'}</Button>
           <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>加载示例</Button>
-          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError('') }}>清除</Button>
+          <Button variant="ghost" onClick={() => setInput('')}>清除</Button>
         </>
       }
     />

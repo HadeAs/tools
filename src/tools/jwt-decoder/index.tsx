@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo } from 'react'
 import { Textarea } from '@/components/ui/textarea'
-import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { decodeJWT, type JWTDecoded } from './logic'
 import { usePersistedState } from '@/hooks/use-persisted-state'
@@ -23,11 +22,7 @@ function ExpiryBadge({ payload }: { payload: Record<string, unknown> }) {
   const diffHour = Math.floor(diffMin / 60)
   const diffDay = Math.floor(diffHour / 24)
 
-  const timeDesc = diffDay > 0
-    ? `${diffDay} 天`
-    : diffHour > 0
-    ? `${diffHour} 小时`
-    : `${diffMin} 分钟`
+  const timeDesc = diffDay > 0 ? `${diffDay} 天` : diffHour > 0 ? `${diffHour} 小时` : `${diffMin} 分钟`
 
   return (
     <div className="space-y-2">
@@ -47,27 +42,25 @@ function ExpiryBadge({ payload }: { payload: Record<string, unknown> }) {
 
 export default function JwtDecoder() {
   const [input, setInput] = usePersistedState('tool:jwt-decoder:input', '')
-  const [decoded, setDecoded] = useState<JWTDecoded | null>(null)
-  const [error, setError] = useState('')
 
-  const decode = () => {
-    try {
-      setDecoded(decodeJWT(input.trim()))
-      setError('')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : '无效的 JWT')
-      setDecoded(null)
-    }
-  }
+  const { decoded, error } = useMemo((): { decoded: JWTDecoded | null; error: string } => {
+    if (!input.trim()) return { decoded: null, error: '' }
+    try { return { decoded: decodeJWT(input.trim()), error: '' } }
+    catch (e) { return { decoded: null, error: e instanceof Error ? e.message : '无效的 JWT' } }
+  }, [input])
 
   return (
     <ToolErrorBoundary>
       <div className="space-y-4">
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">JWT Token</p>
-          <Textarea value={input} onChange={e => setInput(e.target.value)} placeholder="在此粘贴 JWT Token..." className="min-h-[100px] font-mono text-sm" />
+          <Textarea
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="在此粘贴 JWT Token..."
+            className="min-h-[100px] font-mono text-sm"
+          />
         </div>
-        <Button onClick={decode} disabled={!input}>解析</Button>
         {error && <p className="text-sm text-destructive">{error}</p>}
         {decoded && (
           <div className="space-y-3">

@@ -19,7 +19,11 @@
       "Bash(npx vitest *)",
       "Bash(vercel *)",
       "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools add .gitignore)",
-      "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools commit -m 'chore: add .vercel to .gitignore *)"
+      "Bash(git -C /Users/huangzhicheng/Documents/code/agentic/tools commit -m 'chore: add .vercel to .gitignore *)",
+      "Bash(echo \"Server PID: $!\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(curl -s -o /dev/null -w '%{http_code}' http://localhost:3000/__TRACKED_VAR__)",
+      "Bash(npx vercel *)"
     ]
   }
 }

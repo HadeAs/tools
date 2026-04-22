@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -8,8 +8,8 @@ import { ToolErrorBoundary } from '@/components/error-boundary'
 import { parseCron, type CronResult } from './logic'
 
 const PRESETS = [
-  { label: '每分钟', value: '* * * * *' },
-  { label: '每小时', value: '0 * * * *' },
+  { label: '每分钟',    value: '* * * * *' },
+  { label: '每小时',    value: '0 * * * *' },
   { label: '每天 0 点', value: '0 0 * * *' },
   { label: '每周一 9 点', value: '0 9 * * 1' },
   { label: '每月 1 号', value: '0 0 1 * *' },
@@ -17,25 +17,12 @@ const PRESETS = [
 
 export default function CronParser() {
   const [input, setInput] = usePersistedState('tool:cron-parser:input', '')
-  const [result, setResult] = useState<CronResult | null>(null)
-  const [error, setError] = useState('')
 
-  useEffect(() => { if (input) parse(input) }, [])
-
-  const parse = (expr = input) => {
-    try {
-      setResult(parseCron(expr))
-      setError('')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : '解析失败')
-      setResult(null)
-    }
-  }
-
-  const loadPreset = (value: string) => {
-    setInput(value)
-    parse(value)
-  }
+  const { result, error } = useMemo((): { result: CronResult | null; error: string } => {
+    if (!input.trim()) return { result: null, error: '' }
+    try { return { result: parseCron(input.trim()), error: '' } }
+    catch (e) { return { result: null, error: e instanceof Error ? e.message : '解析失败' } }
+  }, [input])
 
   return (
     <ToolErrorBoundary>
@@ -43,14 +30,18 @@ export default function CronParser() {
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Cron 表达式</p>
           <p className="text-xs text-muted-foreground font-mono">分钟 小时 日 月 星期</p>
-          <div className="flex gap-2">
-            <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && parse()} placeholder="例如 0 9 * * 1" className="font-mono" />
-            <Button onClick={() => parse()} disabled={!input}>解析</Button>
-          </div>
+          <Input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="例如 0 9 * * 1"
+            className="font-mono"
+          />
         </div>
         <div className="flex flex-wrap gap-2">
           {PRESETS.map(({ label, value }) => (
-            <Button key={value} variant="outline" size="sm" onClick={() => loadPreset(value)}>{label}</Button>
+            <Button key={value} variant="outline" size="sm" onClick={() => setInput(value)}>
+              {label}
+            </Button>
           ))}
         </div>
         {error && <p className="text-sm text-destructive">{error}</p>}

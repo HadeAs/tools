@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -8,36 +8,28 @@ import { ToolErrorBoundary } from '@/components/error-boundary'
 import { convertBase, type BaseResult } from './logic'
 
 const bases = [
-  { label: '二进制', base: 2, prefix: '0b' },
-  { label: '八进制', base: 8, prefix: '0o' },
-  { label: '十进制', base: 10, prefix: '' },
-  { label: '十六进制', base: 16, prefix: '0x' },
+  { label: '二进制',   base: 2  },
+  { label: '八进制',   base: 8  },
+  { label: '十进制',   base: 10 },
+  { label: '十六进制', base: 16 },
 ]
 
 const resultKeys: { key: keyof BaseResult; label: string }[] = [
-  { key: 'binary', label: '二进制 (2)' },
-  { key: 'octal', label: '八进制 (8)' },
-  { key: 'decimal', label: '十进制 (10)' },
-  { key: 'hex', label: '十六进制 (16)' },
+  { key: 'binary',  label: '二进制 (2)'   },
+  { key: 'octal',   label: '八进制 (8)'   },
+  { key: 'decimal', label: '十进制 (10)'  },
+  { key: 'hex',     label: '十六进制 (16)' },
 ]
 
 export default function NumberBase() {
-  const [input, setInput] = usePersistedState('tool:number-base:input', '')
+  const [input, setInput]     = usePersistedState('tool:number-base:input', '')
   const [fromBase, setFromBase] = usePersistedState('tool:number-base:fromBase', 10)
-  const [result, setResult] = useState<BaseResult | null>(null)
-  const [error, setError] = useState('')
 
-  useEffect(() => { if (input) convert() }, [])
-
-  const convert = () => {
-    try {
-      setResult(convertBase(input, fromBase))
-      setError('')
-    } catch (e) {
-      setError(e instanceof Error ? e.message : '转换失败')
-      setResult(null)
-    }
-  }
+  const { result, error } = useMemo((): { result: BaseResult | null; error: string } => {
+    if (!input.trim()) return { result: null, error: '' }
+    try { return { result: convertBase(input.trim(), fromBase), error: '' } }
+    catch (e) { return { result: null, error: e instanceof Error ? e.message : '转换失败' } }
+  }, [input, fromBase])
 
   return (
     <ToolErrorBoundary>
@@ -55,10 +47,12 @@ export default function NumberBase() {
         <div className="space-y-1">
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">数值</p>
           <p className="text-xs text-muted-foreground">支持负数，如 -255</p>
-          <div className="flex gap-2">
-            <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && convert()} placeholder={`输入${bases.find(b => b.base === fromBase)?.label}数值...`} className="font-mono" />
-            <Button onClick={convert} disabled={!input}>转换</Button>
-          </div>
+          <Input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder={`输入${bases.find(b => b.base === fromBase)?.label}数值...`}
+            className="font-mono"
+          />
         </div>
         {error && <p className="text-sm text-destructive">{error}</p>}
         {result && (

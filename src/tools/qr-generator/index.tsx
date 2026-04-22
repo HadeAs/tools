@@ -8,12 +8,11 @@ import { ToolErrorBoundary } from '@/components/error-boundary'
 
 export default function QrGenerator() {
   const [input,   setInput]   = useState('')
-  const [value,   setValue]   = useState('')
   const [fgColor, setFgColor] = useState('#000000')
   const [bgColor, setBgColor] = useState('#ffffff')
   const canvasRef = useRef<HTMLDivElement>(null)
 
-  const generate = () => setValue(input.trim())
+  const qrValue = input.trim()
 
   const download = () => {
     const canvas = canvasRef.current?.querySelector('canvas')
@@ -28,10 +27,12 @@ export default function QrGenerator() {
       <div className="max-w-sm space-y-4">
         <div className="space-y-1">
           <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">URL 或文本</p>
-          <div className="flex gap-2">
-            <Input value={input} onChange={e => setInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && generate()} placeholder="https://example.com" className="font-mono text-sm" />
-            <Button onClick={generate} disabled={!input}>生成</Button>
-          </div>
+          <Input
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            placeholder="https://example.com"
+            className="font-mono text-sm"
+          />
         </div>
 
         <div className="flex gap-4">
@@ -51,10 +52,10 @@ export default function QrGenerator() {
           ))}
         </div>
 
-        {value && (
+        {qrValue && (
           <div className="space-y-3">
             <div ref={canvasRef} className="flex justify-center rounded-xl border p-6" style={{ backgroundColor: bgColor }}>
-              <QRCodeCanvas value={value} size={200} fgColor={fgColor} bgColor={bgColor} />
+              <QRCodeCanvas value={qrValue} size={200} fgColor={fgColor} bgColor={bgColor} />
             </div>
             <div className="flex justify-center">
               <Button variant="outline" onClick={download}>下载 PNG</Button>
