@@ -58,7 +58,7 @@ export default function HomePage() {
   )
 
   return (
-    <div className="container mx-auto max-w-6xl px-4 py-8">
+    <div className="px-4 py-8 sm:px-6 lg:px-10">
       <div className="flex gap-8">
         <div className="min-w-0 flex-1">
           {/* Hero */}
