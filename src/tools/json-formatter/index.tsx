@@ -74,16 +74,15 @@ export default function JSONFormatter() {
       }
       output={
         <div className="space-y-2">
-          <div className="flex items-center justify-between">
-            <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">输出</p>
-            {output && (
+          {output && (
+            <div className="flex justify-end">
               <button onClick={() => setHighlight(h => !h)}
                 className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${highlight ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
               >
                 {highlight ? '高亮 ON' : '高亮 OFF'}
               </button>
-            )}
-          </div>
+            </div>
+          )}
           {outputPane}
         </div>
       }
