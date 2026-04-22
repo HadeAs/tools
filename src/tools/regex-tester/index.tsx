@@ -23,16 +23,18 @@ export default function RegexTester() {
   }, [pattern, flags, input])
 
   const highlighted = useMemo(() => {
-    if (!result || result.error || result.indices.length === 0) return input
-    let offset = 0
-    let out = input
+    const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    if (!result || result.error || result.indices.length === 0) return esc(input)
+    const parts: string[] = []
+    let last = 0
     result.matches.forEach((match, i) => {
-      const idx = result.indices[i] + offset
-      const tag = `<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">${match}</mark>`
-      out = out.slice(0, idx) + tag + out.slice(idx + match.length)
-      offset += tag.length - match.length
+      const start = result.indices[i]
+      if (start > last) parts.push(esc(input.slice(last, start)))
+      parts.push(`<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">${esc(match)}</mark>`)
+      last = start + match.length
     })
-    return out
+    if (last < input.length) parts.push(esc(input.slice(last)))
+    return parts.join('')
   }, [result, input])
 
   return (

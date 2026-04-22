@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
@@ -15,9 +16,11 @@ const PRESETS = [
 ]
 
 export default function CronParser() {
-  const [input, setInput] = useState('')
+  const [input, setInput] = usePersistedState('tool:cron-parser:input', '')
   const [result, setResult] = useState<CronResult | null>(null)
   const [error, setError] = useState('')
+
+  useEffect(() => { if (input) parse(input) }, [])
 
   const parse = (expr = input) => {
     try {

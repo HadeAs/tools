@@ -15,13 +15,15 @@ export default function TimestampConverter() {
   const [error, setError] = useState('')
 
   const handleUnixToDate = () => {
+    setUnixResult('')
     try { setDateResult(unixToDate(Number(unix))); setError('') }
-    catch (e) { setError((e as Error).message) }
+    catch (e) { setError((e as Error).message); setDateResult('') }
   }
 
   const handleDateToUnix = () => {
+    setDateResult('')
     try { setUnixResult(String(dateToUnix(date))); setError('') }
-    catch (e) { setError((e as Error).message) }
+    catch (e) { setError((e as Error).message); setUnixResult('') }
   }
 
   return (

@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ToolErrorBoundary } from '@/components/error-boundary'
@@ -21,10 +22,12 @@ const resultKeys: { key: keyof BaseResult; label: string }[] = [
 ]
 
 export default function NumberBase() {
-  const [input, setInput] = useState('')
-  const [fromBase, setFromBase] = useState(10)
+  const [input, setInput] = usePersistedState('tool:number-base:input', '')
+  const [fromBase, setFromBase] = usePersistedState('tool:number-base:fromBase', 10)
   const [result, setResult] = useState<BaseResult | null>(null)
   const [error, setError] = useState('')
+
+  useEffect(() => { if (input) convert() }, [])
 
   const convert = () => {
     try {
