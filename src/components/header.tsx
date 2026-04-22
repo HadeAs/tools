@@ -22,7 +22,7 @@ export function Header() {
         </Link>
         <div className="flex items-center gap-2">
           <Link
-            href="https://github.com"
+            href="https://github.com/HadeAs/tools"
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground transition-colors"
