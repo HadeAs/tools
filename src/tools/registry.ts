@@ -5,6 +5,7 @@ import {
   Fingerprint, Binary, CalendarClock,
   ShieldCheck, FileCode, Table, Image, Ruler, Type,
   ArrowLeftRight, Globe, List, Server, Scale,
+  CalendarDays, CalendarPlus, Cake,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -46,6 +47,9 @@ export const tools: ToolMeta[] = [
   { slug: 'line-tools',         name: '行操作工具',      description: '排序、去重、删除空行、反转、打乱行',     category: 'text',       icon: List },
   { slug: 'http-status',        name: 'HTTP 状态码',     description: '查询 HTTP 状态码含义与说明',            category: 'developer',  icon: Server },
   { slug: 'unit-converter',     name: '单位换算',        description: '长度、重量、温度、数据存储单位互转',     category: 'conversion', icon: Scale },
+  { slug: 'date-diff',          name: '日期差计算',      description: '计算两个日期之间的精确差值',             category: 'developer',  icon: CalendarDays },
+  { slug: 'date-add',           name: '日期加减',        description: '在日期上加减年/月/周/天/小时/分钟/秒',   category: 'developer',  icon: CalendarPlus },
+  { slug: 'age-calculator',     name: '年龄计算器',      description: '根据出生日期计算精确年龄与下次生日',     category: 'developer',  icon: Cake },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {

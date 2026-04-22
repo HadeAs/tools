@@ -34,6 +34,9 @@ const dynamicTools: Record<string, ComponentType> = {
   'line-tools':         dynamic(() => import('@/tools/line-tools'),         { ssr: false, loading }),
   'http-status':        dynamic(() => import('@/tools/http-status'),        { ssr: false, loading }),
   'unit-converter':     dynamic(() => import('@/tools/unit-converter'),     { ssr: false, loading }),
+  'date-diff':          dynamic(() => import('@/tools/date-diff'),          { ssr: false, loading }),
+  'date-add':           dynamic(() => import('@/tools/date-add'),           { ssr: false, loading }),
+  'age-calculator':     dynamic(() => import('@/tools/age-calculator'),     { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {
