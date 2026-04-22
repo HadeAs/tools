@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,7 @@ function highlightJson(json: string): string {
   return esc(json).replace(
     /("(?:\\u[0-9a-fA-F]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
     (match) => {
-      if (/^"/.test(match) && /:$/.test(match))
+      if (/^".*"/.test(match) && /:$/.test(match))
         return `<span class="text-blue-600 dark:text-blue-400">${match}</span>`
       if (/^"/.test(match))
         return `<span class="text-green-600 dark:text-green-400">${match}</span>`
@@ -38,13 +38,15 @@ export default function JSONFormatter() {
     catch (e) { setError((e as Error).message); setOutput('') }
   }
 
+  useEffect(() => { if (input.trim()) handle(formatJSON) }, [])
+
   const copyOutput = async () => {
     await navigator.clipboard.writeText(output)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
   }
 
-  const isValid = input ? validateJSON(input) : null
+  const isValid = input.trim() ? validateJSON(input.trim()) : null
 
   const outputPane = output ? (
     highlight ? (
@@ -91,7 +93,7 @@ export default function JSONFormatter() {
           <Button variant="outline" onClick={() => handle(minifyJSON)} disabled={!input}>压缩</Button>
           <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? '已复制！' : '复制'}</Button>
           <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>加载示例</Button>
-          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError('') }}>清除</Button>
+          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError(''); setHighlight(false) }}>清除</Button>
         </>
       }
     />
