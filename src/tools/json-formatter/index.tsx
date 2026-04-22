@@ -31,14 +31,19 @@ export default function JSONFormatter() {
   const [output, setOutput] = useState('')
   const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
-  const [highlight, setHighlight] = useState(false)
+  const [minified, setMinified] = useState(false)
 
-  const handle = (fn: (s: string) => string) => {
-    try { setOutput(fn(input)); setError('') }
-    catch (e) { setError((e as Error).message); setOutput('') }
-  }
-
-  useEffect(() => { if (input.trim()) handle(formatJSON) }, [])
+  useEffect(() => {
+    const trimmed = input.trim()
+    if (!trimmed) { setOutput(''); setError(''); return }
+    try {
+      setOutput(minified ? minifyJSON(trimmed) : formatJSON(trimmed))
+      setError('')
+    } catch (e) {
+      setError((e as Error).message)
+      setOutput('')
+    }
+  }, [input, minified])
 
   const copyOutput = async () => {
     await navigator.clipboard.writeText(output)
@@ -48,51 +53,55 @@ export default function JSONFormatter() {
 
   const isValid = input.trim() ? validateJSON(input.trim()) : null
 
-  const outputPane = output ? (
-    highlight ? (
-      <pre
-        className="min-h-[240px] overflow-auto rounded-md border bg-muted/30 p-3 font-mono text-sm leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: highlightJson(output) }}
-      />
-    ) : (
-      <Textarea readOnly value={output} className="min-h-[240px] font-mono text-sm" />
-    )
-  ) : (
-    <Textarea readOnly value="" className="min-h-[240px] font-mono text-sm" placeholder="结果显示在此..." />
-  )
-
   return (
     <ToolLayout
       input={
         <div className="space-y-2">
-          <Textarea placeholder="在此粘贴 JSON..." value={input} onChange={e => setInput(e.target.value)} className="min-h-[240px] font-mono text-sm" />
+          <Textarea
+            placeholder="在此粘贴 JSON..."
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            className="min-h-[240px] font-mono text-sm"
+          />
           {isValid !== null && (
-            <Badge variant={isValid ? 'default' : 'destructive'}>{isValid ? 'JSON 合法' : 'JSON 非法'}</Badge>
+            <Badge variant={isValid ? 'default' : 'destructive'}>
+              {isValid ? 'JSON 合法' : 'JSON 非法'}
+            </Badge>
           )}
           {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
       }
       output={
-        <div className="space-y-2">
-          {output && (
-            <div className="flex justify-end">
-              <button onClick={() => setHighlight(h => !h)}
-                className={`rounded px-2 py-0.5 text-xs font-medium transition-colors ${highlight ? 'bg-primary text-primary-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-              >
-                {highlight ? '高亮 ON' : '高亮 OFF'}
-              </button>
-            </div>
-          )}
-          {outputPane}
-        </div>
+        output ? (
+          <pre
+            className="min-h-[240px] overflow-auto rounded-md border bg-muted/30 p-3 font-mono text-sm leading-relaxed"
+            dangerouslySetInnerHTML={{ __html: highlightJson(output) }}
+          />
+        ) : (
+          <Textarea readOnly value="" className="min-h-[240px] font-mono text-sm" placeholder="结果显示在此..." />
+        )
       }
       actions={
         <>
-          <Button onClick={() => handle(formatJSON)} disabled={!input}>格式化</Button>
-          <Button variant="outline" onClick={() => handle(minifyJSON)} disabled={!input}>压缩</Button>
-          <Button variant="outline" onClick={copyOutput} disabled={!output}>{copied ? '已复制！' : '复制'}</Button>
+          <Button
+            variant={minified ? 'outline' : 'default'}
+            onClick={() => setMinified(false)}
+            disabled={!input}
+          >
+            格式化
+          </Button>
+          <Button
+            variant={minified ? 'default' : 'outline'}
+            onClick={() => setMinified(true)}
+            disabled={!input}
+          >
+            压缩
+          </Button>
+          <Button variant="outline" onClick={copyOutput} disabled={!output}>
+            {copied ? '已复制！' : '复制'}
+          </Button>
           <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>加载示例</Button>
-          <Button variant="ghost" onClick={() => { setInput(''); setOutput(''); setError(''); setHighlight(false) }}>清除</Button>
+          <Button variant="ghost" onClick={() => { setInput(''); setMinified(false) }}>清除</Button>
         </>
       }
     />
