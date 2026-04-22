@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import type { ToolMeta, ToolCategory } from '@/tools/registry'
 import { FavoriteButton } from './favorite-button'
+import { formatCount } from '@/hooks/use-stats'
 
 interface ToolCardProps {
   tool: ToolMeta
   compact?: boolean
+  count?: number
 }
 
 const iconClass: Record<ToolCategory, string> = {
@@ -14,7 +16,7 @@ const iconClass: Record<ToolCategory, string> = {
   conversion:'icon-conversion',
 }
 
-export function ToolCard({ tool, compact = false }: ToolCardProps) {
+export function ToolCard({ tool, compact = false, count }: ToolCardProps) {
   const Icon = tool.icon
   return (
     <div className="group relative">
@@ -25,8 +27,15 @@ export function ToolCard({ tool, compact = false }: ToolCardProps) {
         <div className={`mt-0.5 shrink-0 rounded-md p-1.5 ${iconClass[tool.category]}`}>
           <Icon className="h-4 w-4" />
         </div>
-        <div className="min-w-0 pr-5">
-          <p className="font-medium leading-none transition-colors group-hover:text-primary">{tool.name}</p>
+        <div className="min-w-0 flex-1 pr-5">
+          <div className="flex items-center gap-2">
+            <p className="font-medium leading-none transition-colors group-hover:text-primary">{tool.name}</p>
+            {count != null && count > 0 && (
+              <span className="shrink-0 rounded-full bg-muted px-1.5 py-0.5 text-[10px] text-muted-foreground">
+                {formatCount(count)}
+              </span>
+            )}
+          </div>
           {!compact && (
             <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{tool.description}</p>
           )}

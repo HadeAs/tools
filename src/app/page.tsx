@@ -6,6 +6,7 @@ import { ToolCard } from '@/components/tool-card'
 import { SearchBar } from '@/components/search-bar'
 import { useRecentTools } from '@/hooks/use-recent-tools'
 import { useFavorites } from '@/hooks/use-favorites'
+import { useStats } from '@/hooks/use-stats'
 
 const categories: ToolCategory[] = ['developer', 'text', 'encoding', 'conversion']
 
@@ -16,11 +17,11 @@ const categoryAccent: Record<ToolCategory, string> = {
   conversion:'accent-conversion',
 }
 
-
 export default function HomePage() {
   const [search, setSearch] = useState('')
   const { recent } = useRecentTools()
   const { favorites } = useFavorites()
+  const { stats } = useStats()
 
   const recentTools = useMemo(
     () => recent.map(slug => getToolBySlug(slug)).filter(Boolean),
@@ -31,6 +32,14 @@ export default function HomePage() {
     () => favorites.map(slug => getToolBySlug(slug)).filter(Boolean),
     [favorites]
   )
+
+  const topTools = useMemo(() => {
+    const hasData = Object.values(stats).some(v => v > 0)
+    if (!hasData) return []
+    return [...tools]
+      .sort((a, b) => (stats[b.slug] ?? 0) - (stats[a.slug] ?? 0))
+      .slice(0, 6)
+  }, [stats])
 
   const filtered = useMemo(() => {
     if (!search.trim()) return tools
@@ -51,54 +60,73 @@ export default function HomePage() {
     <div className="px-4 py-8 sm:px-6 lg:px-10">
       <div className="min-w-0">
         {/* Hero */}
-          <div className="hero-bg animate-fade-up mb-8 rounded-2xl px-6 py-8">
-            <h1 className="text-3xl font-bold tracking-tight">在线开发者工具</h1>
-            <p className="mt-2 text-muted-foreground">免费的在线开发者工具集合，所有计算均在浏览器本地完成。</p>
-          </div>
+        <div className="hero-bg animate-fade-up mb-8 rounded-2xl px-6 py-8">
+          <h1 className="text-3xl font-bold tracking-tight">在线开发者工具</h1>
+          <p className="mt-2 text-muted-foreground">免费的在线开发者工具集合，所有计算均在浏览器本地完成。</p>
+        </div>
 
-          {/* Search */}
-          <div className="animate-fade-up-delay mb-8 max-w-md">
-            <SearchBar value={search} onChange={setSearch} />
-          </div>
+        {/* Search */}
+        <div className="animate-fade-up-delay mb-8 max-w-md">
+          <SearchBar value={search} onChange={setSearch} />
+        </div>
 
-          {!search && favoriteTools.length > 0 && (
-            <section className="mb-8">
-              <h2 className="mb-3 flex items-center gap-2 border-l-2 border-amber-400 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
-                收藏
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {favoriteTools.map(tool => tool && <ToolCard key={tool.slug} tool={tool} compact />)}
-              </div>
-            </section>
-          )}
-
-          {!search && recentTools.length > 0 && (
-            <section className="mb-8">
-              <h2 className="mb-3 border-l-2 border-primary/40 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
-                最近使用
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-                {recentTools.map(tool => tool && <ToolCard key={tool.slug} tool={tool} compact />)}
-              </div>
-            </section>
-          )}
-
-          {grouped.length === 0 ? (
-            <p className="text-muted-foreground">没有找到与 &quot;{search}&quot; 匹配的工具。</p>
-          ) : (
-            <div className="space-y-8">
-              {grouped.map(({ category, label, tools }) => (
-                <section key={category}>
-                  <h2 className={`mb-3 border-l-2 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60 ${categoryAccent[category]}`}>
-                    {label}
-                  </h2>
-                  <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                    {tools.map(tool => <ToolCard key={tool.slug} tool={tool} />)}
-                  </div>
-                </section>
+        {!search && favoriteTools.length > 0 && (
+          <section className="mb-8">
+            <h2 className="mb-3 flex items-center gap-2 border-l-2 border-amber-400 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
+              收藏
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {favoriteTools.map(tool => tool && (
+                <ToolCard key={tool.slug} tool={tool} compact count={stats[tool.slug]} />
               ))}
             </div>
-          )}
+          </section>
+        )}
+
+        {!search && recentTools.length > 0 && (
+          <section className="mb-8">
+            <h2 className="mb-3 border-l-2 border-primary/40 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
+              最近使用
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+              {recentTools.map(tool => tool && (
+                <ToolCard key={tool.slug} tool={tool} compact count={stats[tool.slug]} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {!search && topTools.length > 0 && (
+          <section className="mb-8">
+            <h2 className="mb-3 border-l-2 border-green-500/60 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60">
+              最热门
+            </h2>
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {topTools.map(tool => (
+                <ToolCard key={tool.slug} tool={tool} count={stats[tool.slug]} />
+              ))}
+            </div>
+          </section>
+        )}
+
+        {grouped.length === 0 ? (
+          <p className="text-muted-foreground">没有找到与 &quot;{search}&quot; 匹配的工具。</p>
+        ) : (
+          <div className="space-y-8">
+            {grouped.map(({ category, label, tools }) => (
+              <section key={category}>
+                <h2 className={`mb-3 border-l-2 pl-3 text-sm font-semibold uppercase tracking-wider text-foreground/60 ${categoryAccent[category]}`}>
+                  {label}
+                </h2>
+                <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+                  {tools.map(tool => (
+                    <ToolCard key={tool.slug} tool={tool} count={stats[tool.slug]} />
+                  ))}
+                </div>
+              </section>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
