@@ -1,57 +1,168 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Textarea } from '@/components/ui/textarea'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { ToolLayout } from '@/components/tool-layout'
-import { formatJSON, minifyJSON, validateJSON } from './logic'
 
-const EXAMPLE = '{"name":"DevTools","version":"1.0","features":["format","minify","validate"]}'
+const EXAMPLE = '{"name":"DevTools","version":"1.0","features":["format","minify","validate"],"active":true,"count":42,"config":null}'
 
-function highlightJson(json: string): string {
-  const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-  return esc(json).replace(
-    /("(?:\\u[0-9a-fA-F]{4}|\\[^u]|[^\\"])*"(\s*:)?|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?)/g,
-    (match) => {
-      if (/^".*"/.test(match) && /:$/.test(match))
-        return `<span class="text-blue-600 dark:text-blue-400">${match}</span>`
-      if (/^"/.test(match))
-        return `<span class="text-green-600 dark:text-green-400">${match}</span>`
-      if (/true|false|null/.test(match))
-        return `<span class="text-violet-600 dark:text-violet-400">${match}</span>`
-      return `<span class="text-amber-600 dark:text-amber-400">${match}</span>`
-    }
+// ── JSON tree components ──────────────────────────────────────────────────────
+
+function Primitive({ value }: { value: string | number | boolean | null }) {
+  if (value === null)
+    return <span className="text-violet-600 dark:text-violet-400">null</span>
+  if (typeof value === 'boolean')
+    return <span className="text-violet-600 dark:text-violet-400">{String(value)}</span>
+  if (typeof value === 'number')
+    return <span className="text-amber-600 dark:text-amber-400">{String(value)}</span>
+  return <span className="text-green-600 dark:text-green-400">{JSON.stringify(value)}</span>
+}
+
+function JsonNode({
+  value,
+  keyName,
+  depth,
+  isLast,
+}: {
+  value: unknown
+  keyName?: string
+  depth: number
+  isLast: boolean
+}) {
+  const [open, setOpen] = useState(depth < 2)
+  const comma = isLast ? null : <span className="text-muted-foreground">,</span>
+
+  const keyEl = keyName !== undefined ? (
+    <>
+      <span className="text-blue-600 dark:text-blue-400">{JSON.stringify(keyName)}</span>
+      <span className="text-muted-foreground">{': '}</span>
+    </>
+  ) : null
+
+  // Primitive value
+  if (value === null || typeof value !== 'object') {
+    return (
+      <div className="leading-6">
+        {keyEl}
+        <Primitive value={value as string | number | boolean | null} />
+        {comma}
+      </div>
+    )
+  }
+
+  const isArr = Array.isArray(value)
+  const ob = isArr ? '[' : '{'
+  const cb = isArr ? ']' : '}'
+  const entries = isArr
+    ? (value as unknown[]).map((v, i, a) => ({ key: String(i), val: v, last: i === a.length - 1 }))
+    : Object.entries(value as Record<string, unknown>).map(([k, v], i, a) => ({ key: k, val: v, last: i === a.length - 1 }))
+
+  // Empty object/array
+  if (entries.length === 0) {
+    return (
+      <div className="leading-6">
+        {keyEl}
+        <span className="text-muted-foreground">{ob}{cb}</span>
+        {comma}
+      </div>
+    )
+  }
+
+  // Collapsed
+  if (!open) {
+    return (
+      <div className="leading-6">
+        {keyEl}
+        <button
+          onClick={() => setOpen(true)}
+          className="inline-flex items-center gap-1 rounded px-1.5 py-0 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+        >
+          <span className="text-[10px]">▶</span>
+          <span>{ob}</span>
+          <span className="text-xs opacity-70">
+            {isArr ? `${entries.length} items` : `${entries.length} keys`}
+          </span>
+          <span>{cb}</span>
+        </button>
+        {comma}
+      </div>
+    )
+  }
+
+  // Expanded
+  return (
+    <div>
+      <div className="leading-6">
+        {keyEl}
+        <button
+          onClick={() => setOpen(false)}
+          className="inline-flex items-center gap-1 rounded px-0.5 text-muted-foreground hover:text-foreground transition-colors"
+          title="点击折叠"
+        >
+          <span className="text-[10px]">▼</span>
+        </button>
+        <span>{ob}</span>
+      </div>
+      <div className="ml-4 border-l border-border/40 pl-3">
+        {entries.map(({ key, val, last }) => (
+          <JsonNode
+            key={key}
+            keyName={isArr ? undefined : key}
+            value={val}
+            depth={depth + 1}
+            isLast={last}
+          />
+        ))}
+      </div>
+      <div className="leading-6">{cb}{comma}</div>
+    </div>
   )
 }
 
+// ── Main component ────────────────────────────────────────────────────────────
+
 export default function JSONFormatter() {
   const [input, setInput] = usePersistedState('tool:json-formatter:input', '')
-  const [output, setOutput] = useState('')
-  const [error, setError] = useState('')
   const [copied, setCopied] = useState(false)
   const [minified, setMinified] = useState(false)
 
-  useEffect(() => {
-    const trimmed = input.trim()
-    if (!trimmed) { setOutput(''); setError(''); return }
-    try {
-      setOutput(minified ? minifyJSON(trimmed) : formatJSON(trimmed))
-      setError('')
-    } catch (e) {
-      setError((e as Error).message)
-      setOutput('')
-    }
-  }, [input, minified])
+  const parseResult = useMemo(() => {
+    const t = input.trim()
+    if (!t) return { value: undefined, error: '' }
+    try { return { value: JSON.parse(t), error: '' } }
+    catch (e) { return { value: undefined, error: (e as Error).message } }
+  }, [input])
+
+  const { value: parsed, error: parseError } = parseResult
+  const trimmed = input.trim()
+  const isValid: boolean | null = trimmed ? parseError === '' : null
+  const hasOutput = parsed !== undefined
 
   const copyOutput = async () => {
-    await navigator.clipboard.writeText(output)
+    const text = minified
+      ? JSON.stringify(parsed)
+      : JSON.stringify(parsed, null, 2)
+    await navigator.clipboard.writeText(text)
     setCopied(true)
     setTimeout(() => setCopied(false), 1500)
   }
 
-  const isValid = input.trim() ? validateJSON(input.trim()) : null
+  const outputContent = hasOutput ? (
+    minified ? (
+      <pre className="min-h-[240px] overflow-auto rounded-md border bg-muted/30 p-3 font-mono text-sm break-all whitespace-pre-wrap">
+        {JSON.stringify(parsed)}
+      </pre>
+    ) : (
+      <div className="min-h-[240px] overflow-auto rounded-md border bg-muted/30 p-3 font-mono text-sm">
+        <JsonNode value={parsed} depth={0} isLast={true} />
+      </div>
+    )
+  ) : (
+    <Textarea readOnly value="" className="min-h-[240px] font-mono text-sm" placeholder="结果显示在此..." />
+  )
 
   return (
     <ToolLayout
@@ -68,38 +179,15 @@ export default function JSONFormatter() {
               {isValid ? 'JSON 合法' : 'JSON 非法'}
             </Badge>
           )}
-          {error && <p className="text-xs text-destructive">{error}</p>}
+          {parseError && <p className="text-xs text-destructive">{parseError}</p>}
         </div>
       }
-      output={
-        output ? (
-          <pre
-            className="min-h-[240px] overflow-auto rounded-md border bg-muted/30 p-3 font-mono text-sm leading-relaxed"
-            dangerouslySetInnerHTML={{ __html: highlightJson(output) }}
-          />
-        ) : (
-          <Textarea readOnly value="" className="min-h-[240px] font-mono text-sm" placeholder="结果显示在此..." />
-        )
-      }
+      output={outputContent}
       actions={
         <>
-          <Button
-            variant={minified ? 'outline' : 'default'}
-            onClick={() => setMinified(false)}
-            disabled={!input}
-          >
-            格式化
-          </Button>
-          <Button
-            variant={minified ? 'default' : 'outline'}
-            onClick={() => setMinified(true)}
-            disabled={!input}
-          >
-            压缩
-          </Button>
-          <Button variant="outline" onClick={copyOutput} disabled={!output}>
-            {copied ? '已复制！' : '复制'}
-          </Button>
+          <Button variant={!minified ? 'default' : 'outline'} onClick={() => setMinified(false)} disabled={!input}>格式化</Button>
+          <Button variant={minified ? 'default' : 'outline'} onClick={() => setMinified(true)} disabled={!input}>压缩</Button>
+          <Button variant="outline" onClick={copyOutput} disabled={!hasOutput}>{copied ? '已复制！' : '复制'}</Button>
           <Button variant="ghost" onClick={() => setInput(EXAMPLE)}>加载示例</Button>
           <Button variant="ghost" onClick={() => { setInput(''); setMinified(false) }}>清除</Button>
         </>
