@@ -1,23 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 export function usePersistedState<T>(key: string, defaultValue: T): [T, (v: T) => void] {
-  const [value, setValue] = useState<T>(() => {
-    if (typeof window === 'undefined') return defaultValue
-    try {
-      const stored = localStorage.getItem(key)
-      return stored !== null ? (JSON.parse(stored) as T) : defaultValue
-    } catch {
-      return defaultValue
-    }
-  })
+  // Always initialise with defaultValue so server and client first render match.
+  const [value, setValue] = useState<T>(defaultValue)
 
+  // After hydration, pull the stored value from localStorage.
   useEffect(() => {
     try {
-      localStorage.setItem(key, JSON.stringify(value))
-    } catch {
-      // ignore quota errors
-    }
-  }, [key, value])
+      const stored = localStorage.getItem(key)
+      if (stored !== null) setValue(JSON.parse(stored) as T)
+    } catch {}
+  }, [key])
 
-  return [value, setValue]
+  // Write to localStorage only when the caller explicitly sets a new value,
+  // not during rehydration — avoids briefly overwriting stored data with defaultValue.
+  const set = useCallback((v: T) => {
+    setValue(v)
+    try { localStorage.setItem(key, JSON.stringify(v)) } catch {}
+  }, [key])
+
+  return [value, set]
 }
