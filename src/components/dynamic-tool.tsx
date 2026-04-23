@@ -50,7 +50,6 @@ const dynamicTools: Record<string, ComponentType> = {
   'pinyin':             dynamic(() => import('@/tools/pinyin'),             { ssr: false, loading }),
   'simp-trad':          dynamic(() => import('@/tools/simp-trad'),          { ssr: false, loading }),
   'number-zh':          dynamic(() => import('@/tools/number-zh'),          { ssr: false, loading }),
-  'image-editor':       dynamic(() => import('@/tools/image-editor'),       { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {
