@@ -43,6 +43,13 @@ const dynamicTools: Record<string, ComponentType> = {
   'timezone':           dynamic(() => import('@/tools/timezone'),           { ssr: false, loading }),
   'gradient-generator': dynamic(() => import('@/tools/gradient-generator'), { ssr: false, loading }),
   'sql-formatter':      dynamic(() => import('@/tools/sql-formatter'),      { ssr: false, loading }),
+  'box-shadow':         dynamic(() => import('@/tools/box-shadow'),         { ssr: false, loading }),
+  'border-radius':      dynamic(() => import('@/tools/border-radius'),      { ssr: false, loading }),
+  'clip-path':          dynamic(() => import('@/tools/clip-path'),          { ssr: false, loading }),
+  'css-transform':      dynamic(() => import('@/tools/css-transform'),      { ssr: false, loading }),
+  'pinyin':             dynamic(() => import('@/tools/pinyin'),             { ssr: false, loading }),
+  'simp-trad':          dynamic(() => import('@/tools/simp-trad'),          { ssr: false, loading }),
+  'number-zh':          dynamic(() => import('@/tools/number-zh'),          { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {

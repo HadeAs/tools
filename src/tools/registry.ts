@@ -7,6 +7,7 @@ import {
   ArrowLeftRight, Globe, List, Server, Scale,
   CalendarDays, CalendarPlus, Cake,
   Columns2, KeyRound, ShieldAlert, Globe2, Paintbrush, Database,
+  Square, Scissors, RotateCw, Languages, Repeat, Banknote, Frame,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -57,6 +58,13 @@ export const tools: ToolMeta[] = [
   { slug: 'timezone',           name: '时区转换',        description: '全球主要时区时间对照转换',               category: 'developer',  icon: Globe2 },
   { slug: 'gradient-generator', name: '渐变生成器',      description: '可视化生成 CSS 线性/径向/锥形渐变',      category: 'conversion', icon: Paintbrush },
   { slug: 'sql-formatter',      name: 'SQL 格式化',      description: '格式化 SQL 语句，支持多种数据库方言',    category: 'developer',  icon: Database },
+  { slug: 'box-shadow',         name: 'Box Shadow 生成器', description: '可视化生成 CSS box-shadow，支持多层叠加',  category: 'conversion', icon: Square },
+  { slug: 'border-radius',      name: 'Border Radius 生成器', description: '可视化调整四角圆角，实时预览',          category: 'conversion', icon: Frame },
+  { slug: 'clip-path',          name: 'Clip-Path 生成器', description: '圆形/椭圆/多边形裁剪路径生成',            category: 'conversion', icon: Scissors },
+  { slug: 'css-transform',      name: 'CSS Transform',   description: '可视化调整位移/旋转/缩放/倾斜，实时预览',  category: 'conversion', icon: RotateCw },
+  { slug: 'pinyin',             name: '汉字转拼音',      description: '汉字转拼音，支持声调符号/数字/无声调',     category: 'text',       icon: Languages },
+  { slug: 'simp-trad',          name: '简繁转换',        description: '简体中文与繁體中文互相转换',               category: 'text',       icon: Repeat },
+  { slug: 'number-zh',          name: '数字转中文大写',  description: '阿拉伯数字转人民币中文大写',               category: 'conversion', icon: Banknote },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {
