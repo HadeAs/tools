@@ -6,6 +6,7 @@ import {
   ShieldCheck, FileCode, Table, Image, Ruler, Type,
   ArrowLeftRight, Globe, List, Server, Scale,
   CalendarDays, CalendarPlus, Cake,
+  Columns2, KeyRound, ShieldAlert, Globe2, Paintbrush, Database,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -50,6 +51,12 @@ export const tools: ToolMeta[] = [
   { slug: 'date-diff',          name: '日期差计算',      description: '计算两个日期之间的精确差值',             category: 'developer',  icon: CalendarDays },
   { slug: 'date-add',           name: '日期加减',        description: '在日期上加减年/月/周/天/小时/分钟/秒',   category: 'developer',  icon: CalendarPlus },
   { slug: 'age-calculator',     name: '年龄计算器',      description: '根据出生日期计算精确年龄与下次生日',     category: 'developer',  icon: Cake },
+  { slug: 'json-diff',          name: 'JSON 对比',       description: '对比两段 JSON 并高亮差异',               category: 'developer',  icon: Columns2 },
+  { slug: 'jwt-generator',      name: 'JWT 生成器',      description: '使用 HS256/384/512 生成 JWT Token',      category: 'encoding',   icon: KeyRound },
+  { slug: 'aes-crypto',         name: 'AES 加解密',      description: '客户端 AES 对称加密与解密',              category: 'encoding',   icon: ShieldAlert },
+  { slug: 'timezone',           name: '时区转换',        description: '全球主要时区时间对照转换',               category: 'developer',  icon: Globe2 },
+  { slug: 'gradient-generator', name: '渐变生成器',      description: '可视化生成 CSS 线性/径向/锥形渐变',      category: 'conversion', icon: Paintbrush },
+  { slug: 'sql-formatter',      name: 'SQL 格式化',      description: '格式化 SQL 语句，支持多种数据库方言',    category: 'developer',  icon: Database },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {

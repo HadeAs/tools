@@ -37,6 +37,12 @@ const dynamicTools: Record<string, ComponentType> = {
   'date-diff':          dynamic(() => import('@/tools/date-diff'),          { ssr: false, loading }),
   'date-add':           dynamic(() => import('@/tools/date-add'),           { ssr: false, loading }),
   'age-calculator':     dynamic(() => import('@/tools/age-calculator'),     { ssr: false, loading }),
+  'json-diff':          dynamic(() => import('@/tools/json-diff'),          { ssr: false, loading }),
+  'jwt-generator':      dynamic(() => import('@/tools/jwt-generator'),      { ssr: false, loading }),
+  'aes-crypto':         dynamic(() => import('@/tools/aes-crypto'),         { ssr: false, loading }),
+  'timezone':           dynamic(() => import('@/tools/timezone'),           { ssr: false, loading }),
+  'gradient-generator': dynamic(() => import('@/tools/gradient-generator'), { ssr: false, loading }),
+  'sql-formatter':      dynamic(() => import('@/tools/sql-formatter'),      { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {
