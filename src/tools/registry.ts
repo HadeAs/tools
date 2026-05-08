@@ -8,7 +8,7 @@ import {
   CalendarDays, CalendarPlus, Cake,
   Columns2, KeyRound, ShieldAlert, Globe2, Paintbrush, Database,
   Square, Scissors, RotateCw, Languages, Repeat, Banknote, Frame,
-  Braces, Network,
+  Braces, Network, Barcode, FileX,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -67,7 +67,10 @@ export const tools: ToolMeta[] = [
   { slug: 'simp-trad',          name: '简繁转换',        description: '简体中文与繁體中文互相转换',               category: 'text',       icon: Repeat },
   { slug: 'number-zh',          name: '数字转中文大写',  description: '阿拉伯数字转人民币中文大写',               category: 'conversion', icon: Banknote },
   { slug: 'json-to-ts',         name: 'JSON → TypeScript', description: '将 JSON 自动转换为 TypeScript interface/type 定义', category: 'developer', icon: Braces },
-  { slug: 'cidr-calc',          name: 'CIDR 计算器',     description: '子网划分、IP 范围、掩码与主机数量计算',      category: 'developer', icon: Network },
+  { slug: 'cidr-calc',          name: 'CIDR 计算器',      description: '子网划分、IP 范围、掩码与主机数量计算',      category: 'developer', icon: Network },
+  { slug: 'json-to-zod',        name: 'JSON → Zod',        description: '将 JSON 自动生成 Zod Schema 验证代码',       category: 'developer', icon: Braces },
+  { slug: 'json-to-xml',        name: 'JSON → XML',        description: 'JSON 转换为格式化 XML，支持自定义标签与缩进', category: 'conversion', icon: FileX },
+  { slug: 'barcode-gen',        name: '条形码生成器',      description: '生成 Code128/EAN/UPC 等多格式条形码并下载',  category: 'encoding',  icon: Barcode },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {
