@@ -65,7 +65,7 @@ export default async function ToolPage({ params }: Props) {
         <section>
           <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">相关工具</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-            {related.map(t => <ToolCard key={t.slug} tool={t} compact />)}
+            {related.map(t => <ToolCard key={t.slug} tool={t} />)}
           </div>
         </section>
       )}
