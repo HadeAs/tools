@@ -52,6 +52,9 @@ const dynamicTools: Record<string, ComponentType> = {
   'number-zh':          dynamic(() => import('@/tools/number-zh'),          { ssr: false, loading }),
   'json-to-ts':         dynamic(() => import('@/tools/json-to-ts'),         { ssr: false, loading }),
   'cidr-calc':          dynamic(() => import('@/tools/cidr-calc'),          { ssr: false, loading }),
+  'json-to-zod':        dynamic(() => import('@/tools/json-to-zod'),        { ssr: false, loading }),
+  'json-to-xml':        dynamic(() => import('@/tools/json-to-xml'),        { ssr: false, loading }),
+  'barcode-gen':        dynamic(() => import('@/tools/barcode-gen'),        { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {
