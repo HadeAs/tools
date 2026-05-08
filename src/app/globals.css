@@ -156,6 +156,14 @@
 .accent-encoding   { border-color: oklch(0.62 0.18 55); }
 .accent-conversion { border-color: oklch(0.55 0.18 300); }
 
+/* Tool card: category-colored left border on hover */
+.tool-card {
+  border-left: 2px solid transparent;
+}
+.tool-card:hover {
+  border-left-color: var(--card-accent);
+}
+
 /* Page load fade-up */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(10px); }
