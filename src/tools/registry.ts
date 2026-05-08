@@ -8,6 +8,7 @@ import {
   CalendarDays, CalendarPlus, Cake,
   Columns2, KeyRound, ShieldAlert, Globe2, Paintbrush, Database,
   Square, Scissors, RotateCw, Languages, Repeat, Banknote, Frame,
+  Braces, Network,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -65,6 +66,8 @@ export const tools: ToolMeta[] = [
   { slug: 'pinyin',             name: '汉字转拼音',      description: '汉字转拼音，支持声调符号/数字/无声调',     category: 'text',       icon: Languages },
   { slug: 'simp-trad',          name: '简繁转换',        description: '简体中文与繁體中文互相转换',               category: 'text',       icon: Repeat },
   { slug: 'number-zh',          name: '数字转中文大写',  description: '阿拉伯数字转人民币中文大写',               category: 'conversion', icon: Banknote },
+  { slug: 'json-to-ts',         name: 'JSON → TypeScript', description: '将 JSON 自动转换为 TypeScript interface/type 定义', category: 'developer', icon: Braces },
+  { slug: 'cidr-calc',          name: 'CIDR 计算器',     description: '子网划分、IP 范围、掩码与主机数量计算',      category: 'developer', icon: Network },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {
