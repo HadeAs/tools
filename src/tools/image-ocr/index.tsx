@@ -4,7 +4,38 @@ import { useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { ToolErrorBoundary } from '@/components/error-boundary'
-import { OCR_LANGS, validateImageFile, formatConfidence, formatProgress } from './logic'
+import { OCR_LANGS, BEST_LANG_PATH, validateImageFile, formatConfidence, formatProgress, cleanOcrText } from './logic'
+
+function loadImage(src: string): Promise<HTMLImageElement> {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.onload = () => resolve(img)
+    img.onerror = reject
+    img.src = src
+  })
+}
+
+// 小图放大到合适分辨率（中文字号太小是识别错/漏字的主因），大图保持原样
+async function preprocessImage(file: File): Promise<HTMLCanvasElement> {
+  const url = URL.createObjectURL(file)
+  try {
+    const img = await loadImage(url)
+    const maxDim = Math.max(img.width, img.height)
+    const scale = maxDim < 2000 ? Math.min(3, 2000 / maxDim) : 1
+    const w = Math.round(img.width * scale)
+    const h = Math.round(img.height * scale)
+    const canvas = document.createElement('canvas')
+    canvas.width = w
+    canvas.height = h
+    const ctx = canvas.getContext('2d')!
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(img, 0, 0, w, h)
+    return canvas
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
 
 export default function ImageOcr() {
   const [preview, setPreview] = useState('')
@@ -52,18 +83,25 @@ export default function ImageOcr() {
     if (!file) return
     reset()
     setRunning(true)
+    let worker: Awaited<ReturnType<typeof import('tesseract.js')['createWorker']>> | null = null
     try {
-      const Tesseract = (await import('tesseract.js')).default
-      const result = await Tesseract.recognize(file, OCR_LANGS, {
+      const { createWorker } = await import('tesseract.js')
+      worker = await createWorker(OCR_LANGS, 1, {
+        langPath: BEST_LANG_PATH,
         logger: m => {
-          if (m.status === 'recognizing text') setProgress(formatProgress(m.progress))
+          if (m.status === 'recognizing text' || m.status === 'loading language traineddata') {
+            setProgress(formatProgress(m.progress))
+          }
         },
       })
-      setText(result.data.text.trim())
-      setConfidence(result.data.confidence)
+      const canvas = await preprocessImage(file)
+      const { data } = await worker.recognize(canvas)
+      setText(cleanOcrText(data.text))
+      setConfidence(data.confidence)
     } catch (err) {
       setError(err instanceof Error ? err.message : '识别失败')
     } finally {
+      if (worker) await worker.terminate()
       setRunning(false)
     }
   }
@@ -131,7 +169,7 @@ export default function ImageOcr() {
                 style={{ width: `${progress}%` }}
               />
             </div>
-            <p className="text-xs text-muted-foreground">识别进度 {progress}%（首次需下载语言包，请稍候）</p>
+            <p className="text-xs text-muted-foreground">识别进度 {progress}%（首次需下载高精度语言包，约 30MB，请稍候）</p>
           </div>
         )}
 

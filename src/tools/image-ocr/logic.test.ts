@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { validateImageFile, formatConfidence, formatProgress } from './logic'
+import { validateImageFile, formatConfidence, formatProgress, cleanOcrText } from './logic'
 
 function makeFile(type: string, size: number): File {
   const blob = new Blob([new Uint8Array(size)], { type })
@@ -31,6 +31,28 @@ describe('formatConfidence', () => {
   it('超出范围被钳制', () => {
     expect(formatConfidence(-5)).toBe('0%')
     expect(formatConfidence(120)).toBe('100%')
+  })
+})
+
+describe('cleanOcrText', () => {
+  it('去掉中文字符之间的空格', () => {
+    expect(cleanOcrText('你 好 世 界')).toBe('你好世界')
+    expect(cleanOcrText('这 是  一 段   文字')).toBe('这是一段文字')
+  })
+
+  it('保留中英文/数字之间的空格', () => {
+    expect(cleanOcrText('Hello 世界')).toBe('Hello 世界')
+    expect(cleanOcrText('第 3 章')).toBe('第 3 章')
+    expect(cleanOcrText('the quick fox')).toBe('the quick fox')
+  })
+
+  it('合并 3 行以上空行、去掉行尾空白', () => {
+    expect(cleanOcrText('a\n\n\n\nb')).toBe('a\n\nb')
+    expect(cleanOcrText('行一   \n行二')).toBe('行一\n行二')
+  })
+
+  it('去掉首尾空白', () => {
+    expect(cleanOcrText('  \n内容\n  ')).toBe('内容')
   })
 })
 
