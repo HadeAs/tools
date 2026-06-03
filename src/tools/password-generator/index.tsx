@@ -36,6 +36,7 @@ export default function PasswordGenerator() {
     }
   }, [length, opts])
 
+  // eslint-disable-next-line react-hooks/set-state-in-effect
   useEffect(() => { roll() }, [roll, tick])
 
   const copy = async () => {

@@ -15,6 +15,7 @@ function ExpiryBadge({ payload }: { payload: Record<string, unknown> }) {
   const iat = typeof payload.iat === 'number' ? payload.iat : null
   if (!exp) return null
 
+  // eslint-disable-next-line react-hooks/purity
   const now = Math.floor(Date.now() / 1000)
   const expired = now > exp
   const diffSec = Math.abs(exp - now)

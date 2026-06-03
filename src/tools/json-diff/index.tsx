@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { ToolErrorBoundary } from '@/components/error-boundary'
 import { diffJson, isSame } from './logic'

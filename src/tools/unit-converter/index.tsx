@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useMemo } from 'react'
 import { usePersistedState } from '@/hooks/use-persisted-state'
 import { Input } from '@/components/ui/input'
 import { ToolErrorBoundary } from '@/components/error-boundary'

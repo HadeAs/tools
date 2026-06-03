@@ -73,7 +73,7 @@ export function parseCron(expression: string): CronResult {
 function computeNextRuns(parts: string[], count: number): string[] {
   const [minPart, hourPart, dayPart, monthPart, weekPart] = parts
   const results: string[] = []
-  let date = new Date()
+  const date = new Date()
   date.setSeconds(0, 0)
   date.setMinutes(date.getMinutes() + 1)
 

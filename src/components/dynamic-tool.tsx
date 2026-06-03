@@ -55,6 +55,7 @@ const dynamicTools: Record<string, ComponentType> = {
   'json-to-zod':        dynamic(() => import('@/tools/json-to-zod'),        { ssr: false, loading }),
   'json-to-xml':        dynamic(() => import('@/tools/json-to-xml'),        { ssr: false, loading }),
   'barcode-gen':        dynamic(() => import('@/tools/barcode-gen'),        { ssr: false, loading }),
+  'image-ocr':          dynamic(() => import('@/tools/image-ocr'),          { ssr: false, loading }),
 }
 
 export function DynamicTool({ slug }: { slug: string }) {

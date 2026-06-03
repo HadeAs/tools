@@ -18,6 +18,7 @@ export default function HashGenerator() {
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current)
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!input) { setResults(EMPTY); return }
 
     timerRef.current = setTimeout(() => {

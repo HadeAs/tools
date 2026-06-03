@@ -51,6 +51,7 @@ export default function BarcodeGen() {
   }, [input, opts])
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     renderBarcode()
   }, [renderBarcode])
 

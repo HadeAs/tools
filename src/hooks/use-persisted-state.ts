@@ -8,6 +8,8 @@ export function usePersistedState<T>(key: string, defaultValue: T): [T, (v: T) =
   useEffect(() => {
     try {
       const stored = localStorage.getItem(key)
+      // Intentional post-hydration sync from localStorage.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (stored !== null) setValue(JSON.parse(stored) as T)
     } catch {}
   }, [key])

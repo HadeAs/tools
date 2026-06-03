@@ -8,7 +8,7 @@ import {
   CalendarDays, CalendarPlus, Cake,
   Columns2, KeyRound, ShieldAlert, Globe2, Paintbrush, Database,
   Square, Scissors, RotateCw, Languages, Repeat, Banknote, Frame,
-  Braces, Network, Barcode, FileX,
+  Braces, Network, Barcode, FileX, ScanText,
 } from 'lucide-react'
 import type { ComponentType } from 'react'
 
@@ -71,6 +71,7 @@ export const tools: ToolMeta[] = [
   { slug: 'json-to-zod',        name: 'JSON → Zod',        description: '将 JSON 自动生成 Zod Schema 验证代码',       category: 'developer', icon: Braces },
   { slug: 'json-to-xml',        name: 'JSON → XML',        description: 'JSON 转换为格式化 XML，支持自定义标签与缩进', category: 'conversion', icon: FileX },
   { slug: 'barcode-gen',        name: '条形码生成器',      description: '生成 Code128/EAN/UPC 等多格式条形码并下载',  category: 'encoding',  icon: Barcode },
+  { slug: 'image-ocr',          name: '图片文字识别',      description: '识别并提取图片中的文字（OCR），支持中英文，本地处理', category: 'encoding', icon: ScanText },
 ]
 
 export function getToolBySlug(slug: string): ToolMeta | undefined {
